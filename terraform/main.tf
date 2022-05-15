@@ -6,9 +6,15 @@ provider "google" {
   credentials = file(var.credentials)
 }
 
-resource "google_compute_network" "vpc_network" {
-  name                    = "containerssh-network"
-  auto_create_subnetworks = true
+resource "google_compute_network" "main" {
+  name                    = "main-network"
+  auto_create_subnetworks = false
+}
+
+resource "google_compute_subnetwork" "main" {
+  name          = "main-subnetwork"
+  ip_cidr_range = "10.1.0.0/16"
+  network       = google_compute_network.main.self_link
 }
 
 resource "google_compute_instance" "gateway_vm" {
@@ -22,7 +28,8 @@ resource "google_compute_instance" "gateway_vm" {
   }
 
   network_interface {
-    network = google_compute_network.vpc_network.self_link
+    network    = google_compute_subnetwork.main.self_link
+    network_ip = "10.1.1.1"
     access_config {
 
     }
@@ -40,7 +47,8 @@ resource "google_compute_instance" "sacrificial_vm" {
   }
 
   network_interface {
-    network = google_compute_network.vpc_network.self_link
+    network    = google_compute_network.main.self_link
+    network_ip = "10.1.1.2"
     access_config {
 
     }
