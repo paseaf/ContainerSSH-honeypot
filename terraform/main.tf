@@ -23,12 +23,12 @@ resource "google_compute_instance" "gateway_vm" {
 
   boot_disk {
     initialize_params {
-      image = "ubuntu-pro-2204-jammy-v20220506"
+      image = "ubuntu-os-pro-cloud/ubuntu-pro-2204-lts"
     }
   }
 
   network_interface {
-    network    = google_compute_subnetwork.main.self_link
+    subnetwork = google_compute_subnetwork.main.self_link
     network_ip = "10.1.1.1"
     access_config {
 
@@ -42,12 +42,12 @@ resource "google_compute_instance" "sacrificial_vm" {
 
   boot_disk {
     initialize_params {
-      image = "ubuntu-pro-2204-jammy-v20220506"
+      image = "ubuntu-os-pro-cloud/ubuntu-pro-2204-lts"
     }
   }
 
   network_interface {
-    network    = google_compute_network.main.self_link
+    subnetwork = google_compute_subnetwork.main.self_link
     network_ip = "10.1.1.2"
     access_config {
 
