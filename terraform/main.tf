@@ -11,9 +11,15 @@ resource "google_compute_network" "main" {
   auto_create_subnetworks = false
 }
 
-resource "google_compute_subnetwork" "main" {
-  name          = "main-subnetwork"
-  ip_cidr_range = "10.1.0.0/16"
+resource "google_compute_subnetwork" "gateway_subnet" {
+  name          = "gateway-subnet"
+  ip_cidr_range = "10.0.0.0/24"
+  network       = google_compute_network.main.self_link
+}
+
+resource "google_compute_subnetwork" "honeypot_subnet" {
+  name          = "honeypot-subnet"
+  ip_cidr_range = "10.0.1.0/24"
   network       = google_compute_network.main.self_link
 }
 
@@ -28,8 +34,8 @@ resource "google_compute_instance" "gateway_vm" {
   }
 
   network_interface {
-    subnetwork = google_compute_subnetwork.main.self_link
-    network_ip = "10.1.1.1"
+    subnetwork = google_compute_subnetwork.gateway_subnet.self_link
+    network_ip = "10.0.0.10"
     access_config {
 
     }
@@ -47,8 +53,8 @@ resource "google_compute_instance" "sacrificial_vm" {
   }
 
   network_interface {
-    subnetwork = google_compute_subnetwork.main.self_link
-    network_ip = "10.1.1.2"
+    subnetwork = google_compute_subnetwork.honeypot_subnet.self_link
+    network_ip = "10.0.1.10"
     access_config {
 
     }
