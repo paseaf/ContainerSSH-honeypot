@@ -12,6 +12,8 @@ source "googlecompute" "ubuntu-2204" {
   source_image_family = "ubuntu-pro-2204-lts"
   ssh_username = "packer"
   zone         = "europe-west3-c"
+  account_file = "./gcp.key.json"
+  image_name = "sacrificial-vm-image"
 }
 
 build {
