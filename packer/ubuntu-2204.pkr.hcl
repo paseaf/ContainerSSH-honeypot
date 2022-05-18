@@ -9,9 +9,8 @@ packer {
 
 source "googlecompute" "ubuntu-2204" {
   project_id   = "containerssh"
-  account_file = file("./gcp.key.json")
   source_image_family = "ubuntu-pro-2204-lts"
-  ssh_username = "admin"
+  ssh_username = "packer"
   zone         = "europe-west3-c"
 }
 
