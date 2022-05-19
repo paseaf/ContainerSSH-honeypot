@@ -11,6 +11,22 @@ resource "google_compute_network" "main" {
   auto_create_subnetworks = false
 }
 
+resource "google_compute_firewall" "benchmark_vpc_rules" {
+  name    = "benchmark-vpc-rules"
+  network = google_compute_network.main.self_link
+
+  allow {
+    protocol = "icmp"
+  }
+
+  allow {
+    protocol = "tcp"
+    ports    = ["22"]
+  }
+
+  source_ranges = ["0.0.0.0/0"]
+}
+
 resource "google_compute_subnetwork" "gateway_subnet" {
   name          = "gateway-subnet"
   ip_cidr_range = "10.0.0.0/24"
@@ -43,12 +59,12 @@ resource "google_compute_instance" "gateway_vm" {
 }
 
 resource "google_compute_instance" "sacrificial_vm" {
-  name         = "sacrificial"
+  name         = "sacrificial-vm"
   machine_type = "e2-micro"
 
   boot_disk {
     initialize_params {
-      image = "ubuntu-os-pro-cloud/ubuntu-pro-2204-lts"
+      image = "sacrificial-vm-image"
     }
   }
 
