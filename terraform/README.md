@@ -14,7 +14,7 @@ Install it as follows:
 
    ```bash
    project                  = "<your_GCP_project_ID>"
-   credentials_file         = "gcp-key.json"
+   credentials_file         = "gcp.key.json"
    ```
 
 5. Verify if your Terraform is successfully set up.
@@ -27,3 +27,11 @@ Install it as follows:
 
    You should not see any error message in the output.
 
+## Trouble Shooting
+
+1. `terraform apply` failed with `Error creating Network: googleapi: Error 403: Required 'compute.networks.create' permission for '<project-id>', forbidden`
+
+Possible Issue:
+
+1. `project-id` might be wrong. Check Deployment step 4.
+2. Did you grant the _Project Editor_ permission to the service account in step 3?

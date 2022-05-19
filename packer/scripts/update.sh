@@ -2,14 +2,7 @@
 # This script is adapted from
 # https://github.com/chef/bento/blob/main/packer_templates/ubuntu/scripts/update.sh
 
-# solves apt lock issue
-function apt-get() { 
-  while fuser -s /var/lib/apt/lists/lock;
-  do echo 'apt-get is waiting for the lock release ...';
-      sleep 1;
-  done;
-  /usr/bin/apt-get "$@";
-}
+[ -f ./util_fn ] && source ./util_fn
 
 export DEBIAN_FRONTEND=noninteractive
 
