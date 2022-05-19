@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -euxo pipefail
+
 # solves apt lock issue
 # https://github.com/geerlingguy/packer-boxes/issues/7#issuecomment-425641793
 function apt-get() { 
@@ -11,8 +13,6 @@ function apt-get() {
 }
 
 export DEBIAN_FRONTEND=noninteractive
-
-set -euxo pipefail
 
 apt-get update
 apt-get upgrade -y
