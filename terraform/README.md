@@ -31,7 +31,7 @@ Install it as follows:
 
 1. `terraform apply` failed with `Error creating Network: googleapi: Error 403: Required 'compute.networks.create' permission for '<project-id>', forbidden`
 
-Possible Issue:
+   Possible Issue:
 
-1. `project-id` might be wrong. Check Deployment step 4.
-2. Did you grant the _Project Editor_ permission to the service account in step 3?
+   - `project-id` might be wrong. Check Deployment step 4.
+   - Did you grant the _Project Editor_ permission to the service account in step 3?
