@@ -43,3 +43,8 @@ packer init . && packer build -force .
 An image should be built to your GCP project
 
 Note: `-force` to overwrite previously built image.
+
+### Troubleshooting
+1. Flaky `packer build -force` 
+Solution: rerun the command. There are strange errors sometimes and we don't yet know how to solve it :P
+

@@ -17,7 +17,20 @@ Install it as follows:
    credentials_file         = "gcp.key.json"
    ```
 
-5. Verify if your Terraform is successfully set up.
+5. Create an SSH key to run commands on created VM
+
+   ```bash
+   # create an ssh key
+   ssh-keygen -t ed25519 -a 100 -C "deployer" -f ./deployer_key -N ""
+
+   # add the ssh key to GCP project
+   public_key=$(cat ./deployer_key.pub)
+   echo "deployer":"$public_key" > ./temp_keyfile
+   gcloud compute project-info add-metadata --metadata-from-file=ssh-keys=./temp_keyfile
+   rm ./temp_keyfile
+   ```
+
+6. Verify if your Terraform is successfully set up.
 
    ```bash
    cd terraform

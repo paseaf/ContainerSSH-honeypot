@@ -94,5 +94,16 @@ resource "google_compute_instance" "logger_vm" {
 
     }
   }
+
+  connection {
+    type        = "ssh"
+    user        = "deployer"
+    private_key = file("./deployer_key")
+    host        = self.network_interface.0.access_config.0.nat_ip
+  }
+
+  provisioner "remote-exec" {
+    script = "./scripts/run_minio.sh"
+  }
 }
 
