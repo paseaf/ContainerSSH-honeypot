@@ -13,14 +13,17 @@ source "googlecompute" "ubuntu-2204" {
   ssh_username        = "root"
   zone                = "europe-west3-c"
   account_file        = "./gcp.key.json"
-  image_name          = "sacrificial-vm-image"
 }
 
 build {
-  name = "ubuntu-2204-with-docker"
-  sources = [
-    "source.googlecompute.ubuntu-2204"
-  ]
+  name = "sacrificial vm image"
+
+  source "googlecompute.ubuntu-2204" {
+    image_name = "sacrificial-vm-image"
+  }
+  # sources = [
+  #   "source.googlecompute.ubuntu-2204"
+  # ]
   provisioner "shell" {
     scripts = ["./scripts/update.sh", "./scripts/install_docker.sh"]
   }
