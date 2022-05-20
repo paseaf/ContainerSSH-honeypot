@@ -76,3 +76,34 @@ resource "google_compute_instance" "sacrificial_vm" {
     }
   }
 }
+
+resource "google_compute_instance" "logger_vm" {
+  name         = "logger-vm"
+  machine_type = "e2-micro"
+
+  boot_disk {
+    initialize_params {
+      image = "logger-vm-image"
+    }
+  }
+
+  network_interface {
+    subnetwork = google_compute_subnetwork.gateway_subnet.self_link
+    network_ip = "10.0.0.11"
+    access_config {
+
+    }
+  }
+
+  connection {
+    type        = "ssh"
+    user        = "deployer"
+    private_key = file("./deployer_key")
+    host        = self.network_interface.0.access_config.0.nat_ip
+  }
+
+  provisioner "remote-exec" {
+    script = "./scripts/run_minio.sh"
+  }
+}
+

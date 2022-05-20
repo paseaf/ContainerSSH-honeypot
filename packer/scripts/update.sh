@@ -1,8 +1,10 @@
-#!/bin/bash -eux
+#!/bin/bash
 # This script is adapted from
 # https://github.com/chef/bento/blob/main/packer_templates/ubuntu/scripts/update.sh
 
-[ -f ./util_fn ] && source ./util_fn
+set -euxo pipefail
+
+source /tmp/util_fn
 
 export DEBIAN_FRONTEND=noninteractive
 

@@ -1,5 +1,6 @@
 # gcp key file
 gcp.key.json
+deployer_key*
 
 # Local .terraform directories
 **/.terraform/*

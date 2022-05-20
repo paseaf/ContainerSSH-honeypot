@@ -13,16 +13,56 @@ source "googlecompute" "ubuntu-2204" {
   ssh_username        = "root"
   zone                = "europe-west3-c"
   account_file        = "./gcp.key.json"
-  image_name          = "sacrificial-vm-image"
 }
 
 build {
-  name = "ubuntu-2204-with-docker"
-  sources = [
-    "source.googlecompute.ubuntu-2204"
-  ]
+  name = "sacrificial-vm-image"
+
+  source "googlecompute.ubuntu-2204" {
+    image_name = "sacrificial-vm-image"
+  }
+
+  provisioner "file" {
+    source      = "./scripts/util_fn"
+    destination = "/tmp/util_fn"
+  }
+
   provisioner "shell" {
-    scripts = ["./scripts/update.sh", "./scripts/install_docker.sh"]
+    script = "./scripts/update.sh"
+  }
+
+  provisioner "file" {
+    source      = "./scripts/util_fn"
+    destination = "/tmp/util_fn"
+  }
+  provisioner "shell" {
+    script = "./scripts/install_docker.sh"
+  }
+}
+
+build {
+  name = "logger-vm-image"
+
+  source "googlecompute.ubuntu-2204" {
+    image_name = "logger-vm-image"
+  }
+
+
+  provisioner "file" {
+    source      = "./scripts/util_fn"
+    destination = "/tmp/util_fn"
+  }
+
+  provisioner "shell" {
+    script = "./scripts/update.sh"
+  }
+
+  provisioner "file" {
+    source      = "./scripts/util_fn"
+    destination = "/tmp/util_fn"
+  }
+  provisioner "shell" {
+    script = "./scripts/install_docker.sh"
   }
 }
 
