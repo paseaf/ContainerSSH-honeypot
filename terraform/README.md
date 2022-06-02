@@ -44,7 +44,37 @@ Install it as follows:
 
 1. `terraform apply` failed with `Error creating Network: googleapi: Error 403: Required 'compute.networks.create' permission for '<project-id>', forbidden`
 
-   Possible Issue:
+Possible Issue:
 
-   - `project-id` might be wrong. Check Deployment step 4.
-   - Did you grant the _Project Editor_ permission to the service account in step 3?
+1. `project-id` might be wrong. Check Deployment step 4.
+2. Did you grant the _Project Editor_ permission to the service account in step 3?
+
+- Create an SSH key and add it to your GCP project.
+
+  ```bash
+  # create an ssh key
+  ssh-keygen -t ed25519 -a 100 -C "deployer" -f ./deployer_key -N ""
+
+  # add the ssh key to GCP project
+  public_key=$(cat ./deployer_key.pub)
+  echo "deployer":"$public_key" > ./temp_keyfile
+  gcloud compute project-info add-metadata --metadata-from-file=ssh-keys=./temp_keyfile
+  rm ./temp_keyfile
+  ```
+
+- Open inventory file `ansible/inventory.gcp.yml`, Update `projects` property with your GCP project ID
+
+  ```bash
+  # ...
+  projects:
+    - <your GCP project ID>
+  # ...
+  ```
+
+- :tada: Congratulations! You can now use Terraform and Ansible to provision and configure the SUT.
+
+### Handy commands
+
+```bash
+gcp compute ssh <vm-name> # ssh to a vm (e.g., gateway-vm, logger-vm, sacrificial-vm)
+```
