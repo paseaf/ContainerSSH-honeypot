@@ -11,43 +11,10 @@ resource "google_compute_network" "main" {
   auto_create_subnetworks = false
 }
 
-resource "google_compute_firewall" "benchmark_vpc_rules" {
-  name    = "benchmark-vpc-rules"
-  network = google_compute_network.main.self_link
-
-  allow {
-    protocol = "icmp"
-  }
-
-  # TODO: remove after sacrificial vm is set up
-  allow {
-    protocol = "tcp"
-    ports    = ["22"]
-  }
-
-  source_ranges = ["0.0.0.0/0"]
-}
-
 resource "google_compute_subnetwork" "gateway_subnet" {
   name          = "gateway-subnet"
   ip_cidr_range = "10.0.0.0/24"
   network       = google_compute_network.main.self_link
-}
-
-resource "google_compute_firewall" "gateway_firewall" {
-  name    = "gateway-firewall"
-  network = google_compute_subnetwork.gateway_subnet.name
-
-  allow {
-    protocol = "tcp"
-    ports    = ["22"]
-  }
-
-  # prometheus
-  allow {
-    protocol = "tcp"
-    ports    = ["9100", "9101"]
-  }
 }
 
 resource "google_compute_subnetwork" "honeypot_subnet" {
@@ -56,9 +23,25 @@ resource "google_compute_subnetwork" "honeypot_subnet" {
   network       = google_compute_network.main.self_link
 }
 
+resource "google_compute_firewall" "main_network_allow_ssh_in" {
+  name    = "main-network-allow-ssh-in"
+  network = google_compute_network.main.self_link
+
+  allow {
+    protocol = "icmp"
+  }
+
+  allow {
+    protocol = "tcp"
+    ports    = ["22"]
+  }
+
+  source_ranges = ["0.0.0.0/0"]
+}
+
 resource "google_compute_instance" "gateway_vm" {
   name         = "gateway-vm"
-  machine_type = "e2-micro"
+  machine_type = var.machine_type
 
   boot_disk {
     initialize_params {
@@ -77,7 +60,7 @@ resource "google_compute_instance" "gateway_vm" {
 
 resource "google_compute_instance" "sacrificial_vm" {
   name         = "sacrificial-vm"
-  machine_type = "e2-micro"
+  machine_type = var.machine_type
 
   boot_disk {
     initialize_params {
@@ -86,7 +69,7 @@ resource "google_compute_instance" "sacrificial_vm" {
   }
 
   network_interface {
-    subnetwork = google_compute_subnetwork.honeypot_subnet.self_link
+    subnetwork = google_compute_subnetwork.honeypot_subnet.name
     network_ip = "10.0.1.10"
     access_config {
 
@@ -96,7 +79,7 @@ resource "google_compute_instance" "sacrificial_vm" {
 
 resource "google_compute_instance" "logger_vm" {
   name         = "logger-vm"
-  machine_type = "e2-micro"
+  machine_type = var.machine_type
 
   boot_disk {
     initialize_params {
@@ -105,7 +88,7 @@ resource "google_compute_instance" "logger_vm" {
   }
 
   network_interface {
-    subnetwork = google_compute_subnetwork.gateway_subnet.self_link
+    subnetwork = google_compute_subnetwork.gateway_subnet.name
     network_ip = "10.0.0.11"
     access_config {
 
@@ -120,7 +103,9 @@ resource "google_compute_instance" "logger_vm" {
   }
 
   provisioner "remote-exec" {
-    script = "./scripts/run_minio.sh"
+    scripts = [
+      "./scripts/run_minio.sh",
+      "./scripts/run_prometheus.sh"
+    ]
   }
 }
-
