@@ -19,6 +19,7 @@ resource "google_compute_firewall" "benchmark_vpc_rules" {
     protocol = "icmp"
   }
 
+  # TODO: remove after sacrificial vm is set up
   allow {
     protocol = "tcp"
     ports    = ["22"]
@@ -31,6 +32,22 @@ resource "google_compute_subnetwork" "gateway_subnet" {
   name          = "gateway-subnet"
   ip_cidr_range = "10.0.0.0/24"
   network       = google_compute_network.main.self_link
+}
+
+resource "google_compute_firewall" "gateway_firewall" {
+  name    = "gateway-firewall"
+  network = google_compute_subnetwork.gateway_subnet.name
+
+  allow {
+    protocol = "tcp"
+    ports    = ["22"]
+  }
+
+  # prometheus
+  allow {
+    protocol = "tcp"
+    ports    = ["9100", "9101"]
+  }
 }
 
 resource "google_compute_subnetwork" "honeypot_subnet" {
