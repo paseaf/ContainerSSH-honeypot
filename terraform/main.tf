@@ -56,6 +56,19 @@ resource "google_compute_instance" "gateway_vm" {
 
     }
   }
+
+  connection {
+    type        = "ssh"
+    user        = "deployer"
+    private_key = file("./deployer_key")
+    host        = self.network_interface.0.access_config.0.nat_ip
+  }
+
+  provisioner "remote-exec" {
+    scripts = [
+      "./scripts/run_node_exporter.sh"
+    ]
+  }
 }
 
 resource "google_compute_instance" "sacrificial_vm" {
