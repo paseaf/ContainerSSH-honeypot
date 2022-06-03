@@ -40,6 +40,16 @@ Install it as follows:
 
    You should not see any error message in the output.
 
+## Services
+
+- `http://<logger-vm>:9091/`: Prometheus status page
+  Get logger-vm IP address:
+
+  ```bash
+  gcloud compute instances describe logger-vm \
+    --format='get(networkInterfaces[0].accessConfigs[0].natIP)'
+  ```
+
 ## Trouble Shooting
 
 1. `terraform apply` failed with `Error creating Network: googleapi: Error 403: Required 'compute.networks.create' permission for '<project-id>', forbidden`
