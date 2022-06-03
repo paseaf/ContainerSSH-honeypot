@@ -33,10 +33,22 @@ resource "google_compute_firewall" "main_network_allow_ssh_in" {
 
   allow {
     protocol = "tcp"
-    ports    = ["22"]
+    ports    = ["22", "9091"]
   }
 
   source_ranges = ["0.0.0.0/0"]
+}
+
+resource "google_compute_firewall" "gateway_subnet_allow_node_exporter_e" {
+  name    = "gateway-subnet-allow-node-exporter-e"
+  network = google_compute_network.main.self_link
+
+  allow {
+    protocol = "tcp"
+    ports    = ["9100"]
+  }
+
+  source_ranges = ["10.0.0.0/24"]
 }
 
 resource "google_compute_instance" "gateway_vm" {
@@ -107,6 +119,12 @@ resource "google_compute_instance" "logger_vm" {
     access_config {
 
     }
+  }
+
+  # Prometheus config
+  provisioner "file" {
+    source      = "./files/prometheus.yml" # relative to terraform work_dir
+    destination = "./prometheus.yml"       # relative to remote $HOME
   }
 
   connection {
