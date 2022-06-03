@@ -66,6 +66,7 @@ resource "google_compute_instance" "gateway_vm" {
 
   provisioner "remote-exec" {
     scripts = [
+      "./scripts/download_node_exporter.sh",
       "./scripts/run_node_exporter.sh"
     ]
   }
