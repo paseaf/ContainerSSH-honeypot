@@ -6,6 +6,8 @@ This project is still work in progress\
 
 ![infra diagram](./diagrams/infra.drawio.svg)
 
+Sacrificial VM provides infrastructure for containers.
+
 ### Ports
 
 - MinIO: `9090`
