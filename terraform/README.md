@@ -84,5 +84,5 @@ Trouble:
 
 Possible solutions:
 
-1. `project-id` might be wrong. Check installation section step 4.
+1. `project-id` might be wrong. Check if `project` value is correct in installation section step 4.
 2. Did you grant the _Project Editor_ permission to the service account in installation section step 3?

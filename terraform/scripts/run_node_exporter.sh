@@ -8,6 +8,7 @@ cd ~/node_exporter
 
 nohup ./node_exporter >> ./node_exporter.log &
 
-# wait some time until `./node_exporter` starts running
-# increase the wait time if it doesn't work
+# wait some time until `./node_exporter` is fully up
+# Otehrwise Terraform may exit the session before too early
+# Increase the sleep time if it doesn't work
 sleep 5

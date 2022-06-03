@@ -23,8 +23,8 @@ resource "google_compute_subnetwork" "honeypot_subnet" {
   network       = google_compute_network.main.self_link
 }
 
-resource "google_compute_firewall" "main_network_allow_ssh_in" {
-  name    = "main-network-allow-ssh-in"
+resource "google_compute_firewall" "allow_ssh_in" {
+  name    = "allow-ssh-in"
   network = google_compute_network.main.self_link
 
   allow {
@@ -39,8 +39,8 @@ resource "google_compute_firewall" "main_network_allow_ssh_in" {
   source_ranges = ["0.0.0.0/0"]
 }
 
-resource "google_compute_firewall" "gateway_subnet_allow_node_exporter_e" {
-  name    = "gateway-subnet-allow-node-exporter-e"
+resource "google_compute_firewall" "allow_node_exporter_e" {
+  name    = "allow-node-exporter-e"
   network = google_compute_network.main.self_link
 
   allow {
