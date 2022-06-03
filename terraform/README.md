@@ -1,7 +1,10 @@
-# Deployment
+# Terraform
 
-Terraform is used to provision machines on GCP.
-Install it as follows:
+Terraform is used to provision virtual machines on GCP and run services for honeypot.
+
+## Install and configure Terraform
+
+Install Terraform as follows:
 
 1. Install [Google Cloud SDK](https://cloud.google.com/sdk/docs/install) and `gcloud init` it with your GCP project
 
@@ -40,11 +43,46 @@ Install it as follows:
 
    You should not see any error message in the output.
 
-## Trouble Shooting
+:tada: Congratulations! You can now use Terraform to deploy the honeypot services.
 
-1. `terraform apply` failed with `Error creating Network: googleapi: Error 403: Required 'compute.networks.create' permission for '<project-id>', forbidden`
+## Deploy the services
 
-   Possible Issue:
+In terminal:
 
-   - `project-id` might be wrong. Check Deployment step 4.
-   - Did you grant the _Project Editor_ permission to the service account in step 3?
+```bash
+cd terraform
+terraform apply
+# in promt, answer yes
+```
+
+## Misc.
+
+### Services
+
+#### Prometheus status page
+
+`http://<logger-vm>:9091/`:
+
+To get logger-vm IP address:
+
+```bash
+gcloud compute instances describe logger-vm \
+  --format='get(networkInterfaces[0].accessConfigs[0].natIP)'
+```
+
+### Handy commands
+
+```bash
+gcp compute ssh <vm-name> # ssh to a vm (e.g., gateway-vm, logger-vm, sacrificial-vm)
+```
+
+## Troubleshooting
+
+Trouble:
+
+`terraform apply` failed with `Error creating Network: googleapi: Error 403: Required 'compute.networks.create' permission for '<project-id>', forbidden`
+
+Possible solutions:
+
+1. `project-id` might be wrong. Check if `project` value is correct in installation section step 4.
+2. Did you grant the _Project Editor_ permission to the service account in installation section step 3?
