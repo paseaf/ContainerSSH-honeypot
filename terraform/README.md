@@ -1,7 +1,10 @@
-# Deployment
+# Terraform
 
-Terraform is used to provision machines on GCP.
-Install it as follows:
+Terraform is used to provision virtual machines on GCP and run services for honeypot.
+
+## Install and configure Terraform
+
+Install Terraform as follows:
 
 1. Install [Google Cloud SDK](https://cloud.google.com/sdk/docs/install) and `gcloud init` it with your GCP project
 
@@ -40,51 +43,46 @@ Install it as follows:
 
    You should not see any error message in the output.
 
-## Services
+:tada: Congratulations! You can now use Terraform to deploy the honeypot services.
 
-- `http://<logger-vm>:9091/`: Prometheus status page
-  Get logger-vm IP address:
+## Deploy the services
 
-  ```bash
-  gcloud compute instances describe logger-vm \
-    --format='get(networkInterfaces[0].accessConfigs[0].natIP)'
-  ```
+In terminal:
 
-## Trouble Shooting
+```bash
+cd terraform
+terraform apply
+# in promt, answer yes
+```
 
-1. `terraform apply` failed with `Error creating Network: googleapi: Error 403: Required 'compute.networks.create' permission for '<project-id>', forbidden`
+## Misc.
 
-Possible Issue:
+### Services
 
-1. `project-id` might be wrong. Check Deployment step 4.
-2. Did you grant the _Project Editor_ permission to the service account in step 3?
+#### Prometheus status page
 
-- Create an SSH key and add it to your GCP project.
+`http://<logger-vm>:9091/`:
 
-  ```bash
-  # create an ssh key
-  ssh-keygen -t ed25519 -a 100 -C "deployer" -f ./deployer_key -N ""
+To get logger-vm IP address:
 
-  # add the ssh key to GCP project
-  public_key=$(cat ./deployer_key.pub)
-  echo "deployer":"$public_key" > ./temp_keyfile
-  gcloud compute project-info add-metadata --metadata-from-file=ssh-keys=./temp_keyfile
-  rm ./temp_keyfile
-  ```
-
-- Open inventory file `ansible/inventory.gcp.yml`, Update `projects` property with your GCP project ID
-
-  ```bash
-  # ...
-  projects:
-    - <your GCP project ID>
-  # ...
-  ```
-
-- :tada: Congratulations! You can now use Terraform and Ansible to provision and configure the SUT.
+```bash
+gcloud compute instances describe logger-vm \
+  --format='get(networkInterfaces[0].accessConfigs[0].natIP)'
+```
 
 ### Handy commands
 
 ```bash
 gcp compute ssh <vm-name> # ssh to a vm (e.g., gateway-vm, logger-vm, sacrificial-vm)
 ```
+
+## Troubleshooting
+
+Trouble:
+
+`terraform apply` failed with `Error creating Network: googleapi: Error 403: Required 'compute.networks.create' permission for '<project-id>', forbidden`
+
+Possible solutions:
+
+1. `project-id` might be wrong. Check installation section step 4.
+2. Did you grant the _Project Editor_ permission to the service account in installation section step 3?
