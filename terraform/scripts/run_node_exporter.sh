@@ -8,5 +8,6 @@ cd ~/node_exporter
 
 nohup ./node_exporter >> ./node_exporter.log &
 
-nohup ./node_exporter &
-
+# wait some time until `./node_exporter` starts running
+# increase the wait time if it doesn't work
+sleep 5
