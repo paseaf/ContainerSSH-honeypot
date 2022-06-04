@@ -32,6 +32,8 @@ What you need:
 
 3. Update `project-id` in `main.pkr.hcl` to match yours
 
+4. Run the Script get-guestimage.sh in files, in case the ssh-guestimage not prepared yet.
+
 ### Build the image
 
 Run

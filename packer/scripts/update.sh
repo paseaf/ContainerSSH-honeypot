@@ -4,7 +4,7 @@
 
 set -euxo pipefail
 
-source /tmp/util_fn
+source /home/tmp/util_fn
 
 export DEBIAN_FRONTEND=noninteractive
 
