@@ -13,6 +13,7 @@ source "googlecompute" "ubuntu-2204" {
   ssh_username        = "root"
   zone                = "europe-west3-c"
   account_file        = "./gcp.key.json"
+  machine_type        = "e2-micro"
 }
 
 build {
@@ -30,7 +31,7 @@ build {
     destination = "/home/tmp/util_fn"
   }
   provisioner "shell" {
-    script              = "./scripts/update.sh"
+    script            = "./scripts/update.sh"
     expect_disconnect = true
   }
   provisioner "file" {
@@ -63,7 +64,7 @@ build {
   }
 
   provisioner "shell" {
-    script = "./scripts/update.sh"
+    script            = "./scripts/update.sh"
     expect_disconnect = true
   }
 
