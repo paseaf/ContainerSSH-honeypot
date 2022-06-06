@@ -1,1 +1,0 @@
-wget https://tubcloud.tu-berlin.de/s/4BaEYDNaiiaXTon/download/containerssh-guest-image.tar

@@ -22,7 +22,15 @@ build {
   }
 
   provisioner "shell" {
-    inline = ["mkdir /home/tmp/"]
+    inline = [
+      "mkdir /home/tmp/",
+      "mkdir /etc/docker/",
+    "mkdir /var/docker/"]
+  }
+
+  provisioner "file" {
+    source      = "./files/ca_server.tar"
+    destination = "/home/tmp/ca_server.tar"
   }
 
   provisioner "file" {
@@ -30,7 +38,7 @@ build {
     destination = "/home/tmp/util_fn"
   }
   provisioner "shell" {
-    script              = "./scripts/update.sh"
+    script            = "./scripts/update.sh"
     expect_disconnect = true
   }
   provisioner "file" {
@@ -38,13 +46,20 @@ build {
     destination = "/home/tmp/util_fn"
   }
 
-  provisioner "file" {
-    source      = "./files/containerssh-guest-image.tar"
-    destination = "/home/tmp/containerssh-guest-image.tar"
-  }
   provisioner "shell" {
     script = "./scripts/install_docker.sh"
   }
+
+  provisioner "shell" {
+    inline = [
+      "docker pull containerssh/containerssh-guest-image:latest"
+    ]
+  }
+
+  provisioner "shell" {
+    script = "./scripts/ca_server_setup.sh"
+  }
+
 }
 
 build {
@@ -58,12 +73,17 @@ build {
   }
 
   provisioner "file" {
+    source      = "./files/ca_client.tar"
+    destination = "/home/tmp/ca_client.tar"
+  }
+
+  provisioner "file" {
     source      = "./scripts/util_fn"
     destination = "/home/tmp/util_fn"
   }
 
   provisioner "shell" {
-    script = "./scripts/update.sh"
+    script            = "./scripts/update.sh"
     expect_disconnect = true
   }
 
@@ -71,6 +91,16 @@ build {
     source      = "./scripts/util_fn"
     destination = "/home/tmp/util_fn"
   }
+
+  provisioner "file" {
+    source      = "./files/config.yaml"
+    destination = "/home/tmp/config.yaml"
+  }
+
+  provisioner "shell" {
+    script = "./scripts/containerssh_config.sh"
+  }
+
   provisioner "shell" {
     script = "./scripts/install_docker.sh"
   }
