@@ -33,7 +33,7 @@ resource "google_compute_firewall" "firewall-all-allow-ssh" {
   }
   allow {
     protocol = "tcp"
-    ports    = ["22", "9091"]
+    ports    = ["22", "9090", "9091"]
   }
   source_ranges = ["0.0.0.0/0"]
 }
@@ -105,6 +105,7 @@ resource "google_compute_instance" "gateway_vm" {
 
   provisioner "remote-exec" {
     scripts = [
+      "./scripts/setup_ca.sh",
       "./scripts/download_node_exporter.sh",
       "./scripts/run_node_exporter.sh"
     ]
@@ -127,18 +128,6 @@ resource "google_compute_instance" "sacrificial_vm" {
     access_config {
 
     }
-  }
-  connection {
-    type        = "ssh"
-    user        = "deployer"
-    private_key = file("./deployer_key")
-    host        = self.network_interface.0.access_config.0.nat_ip
-  }
-
-  provisioner "remote-exec" {
-    inline = [
-      "sudo docker load -i /home/tmp/containerssh-guest-image.tar"
-    ]
   }
 
 }
