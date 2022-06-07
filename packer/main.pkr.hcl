@@ -8,11 +8,12 @@ packer {
 }
 
 source "googlecompute" "ubuntu-2204" {
-  project_id          = "containerssh-352007"
+  project_id          = var.project_id
   source_image_family = "ubuntu-pro-2204-lts"
   ssh_username        = "root"
   zone                = "europe-west3-c"
   account_file        = "./gcp.key.json"
+  machine_type        = "e2-small"
 }
 
 build {
@@ -23,19 +24,19 @@ build {
 
   provisioner "shell" {
     inline = [
-      "mkdir /home/tmp/",
       "mkdir /etc/docker/",
-    "mkdir /var/docker/"]
+      "mkdir /var/docker/"
+      ]
   }
 
   provisioner "file" {
     source      = "./files/ca_server.tar"
-    destination = "/home/tmp/ca_server.tar"
+    destination = "/home/deployer/ca_server.tar"
   }
 
   provisioner "file" {
     source      = "./scripts/util_fn"
-    destination = "/home/tmp/util_fn"
+    destination = "/home/deployer/util_fn"
   }
   provisioner "shell" {
     script            = "./scripts/update.sh"
@@ -43,7 +44,7 @@ build {
   }
   provisioner "file" {
     source      = "./scripts/util_fn"
-    destination = "/home/tmp/util_fn"
+    destination = "/home/deployer/util_fn"
   }
 
   provisioner "shell" {
@@ -68,18 +69,14 @@ build {
     image_name = "ubuntu-with-docker-image"
   }
 
-  provisioner "shell" {
-    inline = ["mkdir /home/tmp/"]
-  }
-
   provisioner "file" {
     source      = "./files/ca_client.tar"
-    destination = "/home/tmp/ca_client.tar"
+    destination = "/home/deployer/ca_client.tar"
   }
 
   provisioner "file" {
     source      = "./scripts/util_fn"
-    destination = "/home/tmp/util_fn"
+    destination = "/home/deployer/util_fn"
   }
 
   provisioner "shell" {
@@ -89,12 +86,12 @@ build {
 
   provisioner "file" {
     source      = "./scripts/util_fn"
-    destination = "/home/tmp/util_fn"
+    destination = "/home/deployer/util_fn"
   }
 
   provisioner "file" {
     source      = "./files/config.yaml"
-    destination = "/home/tmp/config.yaml"
+    destination = "/home/deployer/config.yaml"
   }
 
   provisioner "shell" {

@@ -4,7 +4,7 @@
 
 set -euxo pipefail
 
-source /home/tmp/util_fn
+source /home/deployer/util_fn
 
 export DEBIAN_FRONTEND=noninteractive
 
@@ -40,4 +40,4 @@ echo "upgrade all installed packages incl. kernel and kernel headers"
 apt-get -y dist-upgrade -o Dpkg::Options::="--force-confnew";
 
 sudo shutdown -r +1
-sleep 5m
+sleep 3m

@@ -30,9 +30,7 @@ What you need:
 
    > Note: if you want to use a different file name or location, change `account_file` in [`./main.pkr.hcl`](./main.pkr.hcl) accordingly
 
-3. Update `project-id` in `main.pkr.hcl` to match yours
-
-4. Run the Script get-guestimage.sh in files, in case the ssh-guestimage not prepared yet.
+3. Update `project-id` in `variables.pkr.hcl` to match yours
 
 ### Build the image
 
@@ -49,4 +47,3 @@ Note: `-force` to overwrite previously built image.
 ### Troubleshooting
 1. Flaky `packer build -force` 
 Solution: rerun the command. There are strange errors sometimes and we don't yet know how to solve it :P
-

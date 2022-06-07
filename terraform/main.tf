@@ -24,7 +24,7 @@ resource "google_compute_subnetwork" "honeypot_subnet" {
 }
 
 # standard firewall settings
-resource "google_compute_firewall" "firewall-all-allow-ssh" {
+resource "google_compute_firewall" "firewall_standard_rule" {
   name    = "firewall-standard-rule"
   network = google_compute_network.main.self_link
 
@@ -39,7 +39,7 @@ resource "google_compute_firewall" "firewall-all-allow-ssh" {
 }
 
 # open gateway-port 9100 and 9101, to our prometheus and metrics server
-resource "google_compute_firewall" "firewall-gateway-nodeexport" {
+resource "google_compute_firewall" "firewall_gateway_nodeexport" {
   name    = "firewall-gateway-nodeexport"
   network = google_compute_network.main.self_link
 
@@ -53,7 +53,7 @@ resource "google_compute_firewall" "firewall-gateway-nodeexport" {
 }
 
 # allow inbound connection on TCP port 2376 from gateway
-resource "google_compute_firewall" "firewall-sacrificial-exception" {
+resource "google_compute_firewall" "firewall_sacrificial_exception" {
   name = "firewall-sacrificial-exception"
   network = google_compute_network.main.name
   priority = 500
@@ -66,7 +66,7 @@ resource "google_compute_firewall" "firewall-sacrificial-exception" {
 }
 
 # close all outgoing connection from sacrificial host
-resource "google_compute_firewall" "firewall-sacrificial-no-egress" {
+resource "google_compute_firewall" "firewall_sacrificial_no_egress" {
   name = "firewall-sacrificial-no-egress"
   network = google_compute_network.main.name
   direction = "EGRESS"

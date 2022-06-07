@@ -2,7 +2,7 @@
 
 set -euxo pipefail
 
-source /home/tmp/util_fn
+source /home/deployer/util_fn
 
 export DEBIAN_FRONTEND=noninteractive
 
@@ -25,4 +25,3 @@ echo \
 # install docker engine
 apt-get update
 apt-get install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
-
