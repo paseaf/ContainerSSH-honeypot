@@ -120,7 +120,7 @@ resource "google_compute_instance" "gateway_vm" {
       "./scripts/setup_ca.sh",
       "./scripts/download_node_exporter.sh",
       "./scripts/run_node_exporter.sh",
-      "./scripts/run_container.sh"
+      "./scripts/run_docker_container.sh"
     ]
   }
 }
