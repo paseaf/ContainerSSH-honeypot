@@ -26,7 +26,7 @@ build {
     inline = [
       "mkdir /etc/docker/",
       "mkdir /var/docker/"
-      ]
+    ]
   }
 
   provisioner "file" {
@@ -69,6 +69,7 @@ build {
     image_name = "ubuntu-with-docker-image"
   }
 
+  # test
   provisioner "file" {
     source      = "./files/ca_client.tar"
     destination = "/home/deployer/ca_client.tar"
@@ -89,9 +90,15 @@ build {
     destination = "/home/deployer/util_fn"
   }
 
+  provisioner "shell" {
+    inline = [
+      "mkdir /srv/containerssh/"
+    ]
+  }
+
   provisioner "file" {
     source      = "./files/config.yaml"
-    destination = "/home/deployer/config.yaml"
+    destination = "/srv/containerssh/config.yaml"
   }
 
   provisioner "shell" {
