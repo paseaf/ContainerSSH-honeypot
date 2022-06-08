@@ -1,0 +1,2 @@
+terraform/variables.tf
+terraform/.terraform.lock.hcl

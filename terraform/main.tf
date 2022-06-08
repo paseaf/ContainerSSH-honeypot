@@ -33,8 +33,20 @@ resource "google_compute_firewall" "firewall_standard_rule" {
   }
   allow {
     protocol = "tcp"
-    ports    = ["22", "9090", "9091"]
+    ports    = ["22"]
   }
+  source_ranges = ["0.0.0.0/0"]
+}
+
+# open port 9090 and 9091 on our logger-vm: to control metrics and minio
+resource "google_compute_firewall" "firewall_logger_view" {
+  name    = "firewall-logger-view"
+  network = google_compute_network.main.self_link
+  allow {
+    protocol = "tcp"
+    ports    = ["9090", "9091"]
+  }
+  target_tags = [ "observer" ]
   source_ranges = ["0.0.0.0/0"]
 }
 
@@ -107,7 +119,8 @@ resource "google_compute_instance" "gateway_vm" {
     scripts = [
       "./scripts/setup_ca.sh",
       "./scripts/download_node_exporter.sh",
-      "./scripts/run_node_exporter.sh"
+      "./scripts/run_node_exporter.sh",
+      "./scripts/run_container.sh"
     ]
   }
 }
