@@ -5,7 +5,5 @@
 
 variable "project_id" {
   type    = string
-  default = "containerssh-352007"
-  // Sensitive vars are hidden from output as of Packer v1.6.5
-  sensitive = true
+  description = "Your GCP project ID"
 }
