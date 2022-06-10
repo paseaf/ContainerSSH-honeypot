@@ -39,7 +39,7 @@ build {
     destination = "/home/deployer/util_fn"
   }
   provisioner "shell" {
-    script            = "./scripts/update.sh"
+    script            = "./scripts/update_apt_packages.sh"
     expect_disconnect = true
   }
   provisioner "file" {
@@ -81,7 +81,7 @@ build {
   }
 
   provisioner "shell" {
-    script            = "./scripts/update.sh"
+    script            = "./scripts/update_apt_packages.sh"
     expect_disconnect = true
   }
 
