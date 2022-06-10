@@ -46,7 +46,7 @@ resource "google_compute_firewall" "firewall_logger_view" {
     protocol = "tcp"
     ports    = ["9090", "9091"]
   }
-  target_tags = [ "observer" ]
+  target_tags   = ["observer"]
   source_ranges = ["0.0.0.0/0"]
 }
 
@@ -57,33 +57,33 @@ resource "google_compute_firewall" "firewall_gateway_nodeexport" {
 
   allow {
     protocol = "tcp"
-    ports    = ["9100","9101"]
+    ports    = ["9100", "9101"]
   }
 
-  target_tags = [ "gateway" ]
-  source_tags = [ "observer" ]
+  target_tags = ["gateway"]
+  source_tags = ["observer"]
 }
 
 # allow inbound connection on TCP port 2376 from gateway
 resource "google_compute_firewall" "firewall_sacrificial_exception" {
-  name = "firewall-sacrificial-exception"
-  network = google_compute_network.main.name
-  priority = 500
-  source_tags = [ "gateway" ]
-  target_tags = [ "sacrificial" ]
+  name        = "firewall-sacrificial-exception"
+  network     = google_compute_network.main.name
+  priority    = 500
+  source_tags = ["gateway"]
+  target_tags = ["sacrificial"]
   allow {
     protocol = "tcp"
-    ports = [ "2376" ]
+    ports    = ["2376"]
   }
 }
 
 # close all outgoing connection from sacrificial host
 resource "google_compute_firewall" "firewall_sacrificial_no_egress" {
-  name = "firewall-sacrificial-no-egress"
-  network = google_compute_network.main.name
-  direction = "EGRESS"
-  destination_ranges = [ "0.0.0.0/0" ]
-  target_tags = [ "sacrificial" ]
+  name               = "firewall-sacrificial-no-egress"
+  network            = google_compute_network.main.name
+  direction          = "EGRESS"
+  destination_ranges = ["0.0.0.0/0"]
+  target_tags        = ["sacrificial"]
   deny {
     protocol = "all"
   }
@@ -92,7 +92,7 @@ resource "google_compute_firewall" "firewall_sacrificial_no_egress" {
 resource "google_compute_instance" "gateway_vm" {
   name         = "gateway-vm"
   machine_type = var.machine_type
-  tags = [ "gateway" ]
+  tags         = ["gateway"]
 
   boot_disk {
     initialize_params {
@@ -128,7 +128,7 @@ resource "google_compute_instance" "gateway_vm" {
 resource "google_compute_instance" "sacrificial_vm" {
   name         = "sacrificial-vm"
   machine_type = var.machine_type
-  tags = [ "sacrificial" ]
+  tags         = ["sacrificial"]
   boot_disk {
     initialize_params {
       image = "sacrificial-vm-image"
@@ -148,7 +148,7 @@ resource "google_compute_instance" "sacrificial_vm" {
 resource "google_compute_instance" "logger_vm" {
   name         = "logger-vm"
   machine_type = var.machine_type
-  tags = [ "observer" ]
+  tags         = ["observer"]
   boot_disk {
     initialize_params {
       image = "ubuntu-with-docker-image"

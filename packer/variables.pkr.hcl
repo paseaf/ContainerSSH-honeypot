@@ -4,6 +4,6 @@
 // set them from the command line, a var-file, or the environment.
 
 variable "project_id" {
-  type    = string
+  type        = string
   description = "Your GCP project ID"
 }

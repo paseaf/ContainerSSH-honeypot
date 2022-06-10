@@ -1,11 +1,11 @@
 variable "project" {
-  type = string
+  type        = string
   description = "Your GCP project ID"
 }
 
 variable "credentials" {
-  type = string
-  description =  "Path to your GCP service account key file (JSON)"
+  type        = string
+  description = "Path to your GCP service account key file (JSON)"
 }
 
 variable "machine_type" {
