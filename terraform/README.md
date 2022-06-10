@@ -13,7 +13,7 @@ Install Terraform as follows:
 3. Create and download a GCP _service account key_ (in JSON) following [Terraform - Set Up GCP](https://learn.hashicorp.com/tutorials/terraform/google-cloud-platform-build?in=terraform/gcp-get-started).\
    Terraform will use it to manage your GCP resources. Move the key file to current folder as `./gcp-key.json`
 
-4. Update `terraform/terraform.tfvars` file with the following content
+4. Create a `terraform/terraform.tfvars` file with the following content
 
    ```bash
    project                  = "<your_GCP_project_ID>"
