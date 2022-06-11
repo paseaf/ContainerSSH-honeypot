@@ -2,7 +2,7 @@
 
 set -euxo pipefail
 
-source /home/deployer/util_fn
+source /home/deployer/tmp/apt_get_wait_lock.sh
 
 export DEBIAN_FRONTEND=noninteractive
 

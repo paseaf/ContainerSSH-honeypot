@@ -24,6 +24,7 @@ build {
 
   provisioner "shell" {
     inline = [
+      "mkdir -p /home/deployer/tmp",
       "mkdir /etc/docker/",
       "mkdir /var/docker/"
     ]
@@ -31,20 +32,20 @@ build {
 
   provisioner "file" {
     source      = "./files/ca_server.tar"
-    destination = "/home/deployer/ca_server.tar"
+    destination = "/home/deployer/tmp/ca_server.tar"
   }
 
   provisioner "file" {
-    source      = "./scripts/util_fn"
-    destination = "/home/deployer/util_fn"
+    source      = "./scripts/apt_get_wait_lock.sh"
+    destination = "/home/deployer/tmp/apt_get_wait_lock.sh"
   }
   provisioner "shell" {
     script            = "./scripts/update_apt_packages.sh"
     expect_disconnect = true
   }
   provisioner "file" {
-    source      = "./scripts/util_fn"
-    destination = "/home/deployer/util_fn"
+    source      = "./scripts/apt_get_wait_lock.sh"
+    destination = "/home/deployer/tmp/apt_get_wait_lock.sh"
   }
 
   provisioner "shell" {
@@ -56,11 +57,6 @@ build {
       "docker pull containerssh/containerssh-guest-image:latest"
     ]
   }
-
-  provisioner "shell" {
-    script = "./scripts/ca_server_setup.sh"
-  }
-
 }
 
 build {
@@ -69,15 +65,21 @@ build {
     image_name = "ubuntu-with-docker-image"
   }
 
+  provisioner "shell" {
+    inline = [
+      "mkdir -p /home/deployer/tmp",
+    ]
+  }
+
   # test
   provisioner "file" {
     source      = "./files/ca_client.tar"
-    destination = "/home/deployer/ca_client.tar"
+    destination = "/home/deployer/tmp/ca_client.tar"
   }
 
   provisioner "file" {
-    source      = "./scripts/util_fn"
-    destination = "/home/deployer/util_fn"
+    source      = "./scripts/apt_get_wait_lock.sh"
+    destination = "/home/deployer/tmp/apt_get_wait_lock.sh"
   }
 
   provisioner "shell" {
@@ -86,8 +88,8 @@ build {
   }
 
   provisioner "file" {
-    source      = "./scripts/util_fn"
-    destination = "/home/deployer/util_fn"
+    source      = "./scripts/apt_get_wait_lock.sh"
+    destination = "/home/deployer/tmp/apt_get_wait_lock.sh"
   }
 
   provisioner "shell" {
