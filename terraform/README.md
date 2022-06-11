@@ -48,6 +48,7 @@ Install Terraform as follows:
 ## Deploy the services
 
 ### 1. Provision
+
 In terminal:
 
 ```bash
@@ -57,10 +58,13 @@ terraform apply
 ```
 
 ### 2. Creating a CA, server and client keys with openssl
+
 > This section is adapted from [Docker page](https://docs.docker.com/engine/security/protect-access/#create-a-ca-server-and-client-keys-with-openssl).
 
 This step allows the gateway VM to run `docker` directly on sacrificial VM via TLS.
+
 #### 2.1 Generate CA key pair, server key, and a CSR
+
 1. Log into sacrificial VM
    ```bash
    gcloud compute ssh sacrificial-vm
@@ -106,7 +110,6 @@ This step allows the gateway VM to run `docker` directly on sacrificial VM via T
    commonName             = sacrificial-vm
    emailAddress           = emailaddress@myemail.com
    ```
-
 
 1. Generate keys
 
@@ -158,7 +161,9 @@ This step allows the gateway VM to run `docker` directly on sacrificial VM via T
    openssl x509 -req -days 365 -sha256 -in client.csr -CA ca.pem -CAkey ca-key.pem \
      -passin file:passphrase -CAcreateserial -out cert.pem -extfile extfile-client.cnf
    ```
+
    You should see
+
    ```
    Certificate request self-signature ok
    subject=CN = client
@@ -173,6 +178,7 @@ This step allows the gateway VM to run `docker` directly on sacrificial VM via T
    chmod -v 0444 ca.pem server-cert.pem cert.pem
    ```
 1. Make sacrificial VM's Docker daemon only accept connections with trusted certificate
+
    ```bash
    # Stop current running docker daemon
    sudo systemctl stop docker.socket
@@ -189,28 +195,32 @@ This step allows the gateway VM to run `docker` directly on sacrificial VM via T
 
 #### 2.3 Configure gateway VM to run Docker via sacrificial VM by default
 
-1. Move client key files to gateway VM\
+This step will move client key files to gateway VM.
+
 On your local machine, run
-   ```bash
-   # create  a temp folder for key files
-   mkdir -p /tmp/ca
 
-   # download key files from sacrificial VM
-   gcloud compute scp --recurse sacrificial-vm:~/ca/{ca,cert,key}.pem /tmp/ca/
+```bash
+# create  a temp folder for key files
+mkdir -p /tmp/ca
 
-   # upload key files to gateway VM
-   gcloud compute scp --recurse /tmp/ca gateway-vm:~/.docker
+# download key files from sacrificial VM
+gcloud compute scp --recurse sacrificial-vm:~/ca/{ca,cert,key}.pem /tmp/ca/
 
-   # clean up temp files
-   rm -rfv /tmp/ca
-   ```
+# upload key files to gateway VM
+gcloud compute scp --recurse /tmp/ca gateway-vm:~/.docker
+
+# clean up temp files
+rm -rfv /tmp/ca
+```
+
+#### 2.4 Verify if CA is correctly set up
 
 1. Log into the gateway VM
    ```bash
    gcloud compute ssh gateway-vm
    ```
-1. Check docker version\
-It should use to your Docker daemon on sacrificial VM.
+1. Check Docker version\
+   It should use to your Docker daemon on sacrificial VM.
    ```bash
    # use remote docker engine by default
    # TODO should we add it to ~/.bashrc?
