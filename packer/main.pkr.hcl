@@ -31,11 +31,6 @@ build {
   }
 
   provisioner "file" {
-    source      = "./files/ca_server.tar"
-    destination = "/home/deployer/tmp/ca_server.tar"
-  }
-
-  provisioner "file" {
     source      = "./scripts/apt_get_wait_lock.sh"
     destination = "/home/deployer/tmp/apt_get_wait_lock.sh"
   }
@@ -69,12 +64,6 @@ build {
     inline = [
       "mkdir -p /home/deployer/tmp",
     ]
-  }
-
-  # test
-  provisioner "file" {
-    source      = "./files/ca_client.tar"
-    destination = "/home/deployer/tmp/ca_client.tar"
   }
 
   provisioner "file" {
