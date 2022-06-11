@@ -150,7 +150,9 @@ This step allows the gateway VM to connect to the Docker daemon on sacrificial V
 
 #### 2.2 Client authentication
 
-1. Create client keys (still on sacrificial VM for simplicity)
+Continue working on sacrificial VM for simplicity.
+
+1. Create client keys
 
    ```bash
    cd ~/ca
@@ -182,22 +184,23 @@ This step allows the gateway VM to connect to the Docker daemon on sacrificial V
    ```bash
    # Stop current running docker daemon
    sudo systemctl stop docker.socket
-   # start docker daemon with specified keys
-   # TODO: find how to run this in background
+   # Run docker daemon in background with specified keys
 
-   sudo dockerd \
+   cd ~/ca
+   nohup sudo dockerd \
       --tlsverify \
       --tlscacert=ca.pem \
       --tlscert=server-cert.pem \
       --tlskey=server-key.pem \
-      -H=0.0.0.0:2376
+      -H=0.0.0.0:2376 \
+      &> dockerd.log &
    ```
 
 #### 2.3 Configure gateway VM to run Docker via sacrificial VM by default
 
 This step will move client key files to gateway VM.
 
-On your local machine, run
+On your **local** machine, run
 
 ```bash
 # create  a temp folder for key files
@@ -219,15 +222,23 @@ rm -rfv /tmp/ca
    ```bash
    gcloud compute ssh gateway-vm
    ```
-1. Check Docker version\
-   It should use to your Docker daemon on sacrificial VM.
+1. Check remote Docker engine's version
+
+   You can either use ENV variables:
+
    ```bash
    # use remote docker engine by default
-   # TODO should we add it to ~/.bashrc?
    export DOCKER_HOST=tcp://sacrificial-vm:2376 DOCKER_TLS_VERIFY=1
    # test connection
    docker version
    ```
+
+   Or parameters
+
+   ```bash
+   docker --tlsverify  -H=tcp://sacrificial-vm:2376 version
+   ```
+
    You should not see any error message here.
 
 ## Misc.
