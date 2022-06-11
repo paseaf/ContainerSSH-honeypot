@@ -57,11 +57,11 @@ terraform apply
 # in promt, answer yes
 ```
 
-### 2. Creating a CA, server and client keys with openssl
+### 2. Set up CA
 
 > This section is adapted from [Docker page](https://docs.docker.com/engine/security/protect-access/#create-a-ca-server-and-client-keys-with-openssl).
 
-This step allows the gateway VM to run `docker` directly on sacrificial VM via TLS.
+This step allows the gateway VM to connect to the Docker daemon on sacrificial VM via TLS.
 
 #### 2.1 Generate CA key pair, server key, and a CSR
 
