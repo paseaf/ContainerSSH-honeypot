@@ -4,7 +4,7 @@
 
 set -euxo pipefail
 
-source /tmp/util_fn
+source /home/deployer/tmp/apt_get_wait_lock.sh
 
 export DEBIAN_FRONTEND=noninteractive
 
@@ -40,4 +40,3 @@ echo "upgrade all installed packages incl. kernel and kernel headers"
 apt-get -y dist-upgrade -o Dpkg::Options::="--force-confnew";
 
 reboot
-

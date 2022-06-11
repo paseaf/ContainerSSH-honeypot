@@ -30,7 +30,11 @@ What you need:
 
    > Note: if you want to use a different file name or location, change `account_file` in [`./main.pkr.hcl`](./main.pkr.hcl) accordingly
 
-3. Update `project-id` in `main.pkr.hcl` to match yours
+3. Create a `variables.auto.pkrvars.hcl` file:
+
+```bash
+project = "<your_GCP_project_ID>"
+```
 
 ### Build the image
 
@@ -45,6 +49,6 @@ An image should be built to your GCP project
 Note: `-force` to overwrite previously built image.
 
 ### Troubleshooting
-1. Flaky `packer build -force` 
-Solution: rerun the command. There are strange errors sometimes and we don't yet know how to solve it :P
 
+1. Flaky `packer build -force`
+   Solution: rerun the command. There are strange errors sometimes and we don't yet know how to solve it :P

@@ -2,7 +2,7 @@
 
 set -euxo pipefail
 
-source /tmp/util_fn
+source /home/deployer/tmp/apt_get_wait_lock.sh
 
 export DEBIAN_FRONTEND=noninteractive
 
@@ -25,4 +25,3 @@ echo \
 # install docker engine
 apt-get update
 apt-get install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
-
