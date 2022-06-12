@@ -45,7 +45,10 @@ build {
   }
 
   provisioner "shell" {
-    script = "./scripts/install_docker.sh"
+    scripts = [
+      "./scripts/install_docker.sh",
+      "./scripts/build_containerssh_guest_image.sh"
+    ]
   }
 
   provisioner "shell" {
