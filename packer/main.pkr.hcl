@@ -24,23 +24,24 @@ build {
 
   provisioner "shell" {
     inline = [
-      "mkdir -p /home/deployer/tmp",
-      "mkdir /etc/docker/",
-      "mkdir /var/docker/"
+      "mkdir -p /home/deployer/files",
+      "mkdir -p /home/deployer/scripts"
     ]
   }
 
   provisioner "file" {
-    source      = "./scripts/apt_get_wait_lock.sh"
-    destination = "/home/deployer/tmp/apt_get_wait_lock.sh"
+    source      = "./scripts"
+    destination = "/home/deployer/"
   }
+
+  provisioner "file" {
+    source      = "./files"
+    destination = "/home/deployer/"
+  }
+
   provisioner "shell" {
     script            = "./scripts/update_apt_packages.sh"
     expect_disconnect = true
-  }
-  provisioner "file" {
-    source      = "./scripts/apt_get_wait_lock.sh"
-    destination = "/home/deployer/tmp/apt_get_wait_lock.sh"
   }
 
   provisioner "shell" {
@@ -62,29 +63,20 @@ build {
 
   provisioner "shell" {
     inline = [
-      "mkdir -p /home/deployer/tmp",
+      "mkdir -p /home/deployer/files",
+      "mkdir -p /home/deployer/scripts",
+      "mkdir -p /srv/containerssh/"
     ]
   }
 
   provisioner "file" {
-    source      = "./scripts/apt_get_wait_lock.sh"
-    destination = "/home/deployer/tmp/apt_get_wait_lock.sh"
-  }
-
-  provisioner "shell" {
-    script            = "./scripts/update_apt_packages.sh"
-    expect_disconnect = true
+    source      = "./scripts"
+    destination = "/home/deployer/"
   }
 
   provisioner "file" {
-    source      = "./scripts/apt_get_wait_lock.sh"
-    destination = "/home/deployer/tmp/apt_get_wait_lock.sh"
-  }
-
-  provisioner "shell" {
-    inline = [
-      "mkdir /srv/containerssh/"
-    ]
+    source      = "./files"
+    destination = "/home/deployer/"
   }
 
   provisioner "file" {
