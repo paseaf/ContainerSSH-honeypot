@@ -60,18 +60,12 @@ build {
 
   provisioner "shell" {
     inline = [
-      "mkdir -p /home/deployer/files",
       "mkdir -p /home/deployer/scripts"
     ]
   }
 
   provisioner "file" {
     source      = "./scripts"
-    destination = "/home/deployer/"
-  }
-
-  provisioner "file" {
-    source      = "./files"
     destination = "/home/deployer/"
   }
 
