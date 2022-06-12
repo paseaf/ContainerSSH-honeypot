@@ -50,12 +50,6 @@ build {
       "./scripts/build_containerssh_guest_image.sh"
     ]
   }
-
-  provisioner "shell" {
-    inline = [
-      "docker pull containerssh/containerssh-guest-image:latest"
-    ]
-  }
 }
 
 build {
@@ -82,16 +76,15 @@ build {
     destination = "/home/deployer/"
   }
 
-  provisioner "file" {
-    source      = "./files/config.yaml"
-    destination = "/srv/containerssh/config.yaml"
+  provisioner "shell" {
+    script            = "./scripts/update_apt_packages.sh"
+    expect_disconnect = true
   }
 
   provisioner "shell" {
-    script = "./scripts/containerssh_config.sh"
-  }
-
-  provisioner "shell" {
-    script = "./scripts/install_docker.sh"
+    scripts = [
+      "./scripts/containerssh_config.sh",
+      "./scripts/install_docker.sh"
+    ]
   }
 }
