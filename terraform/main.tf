@@ -120,7 +120,6 @@ resource "google_compute_instance" "gateway_vm" {
       "./scripts/setup_ca.sh",
       "./scripts/download_node_exporter.sh",
       "./scripts/run_node_exporter.sh",
-      "./scripts/run_docker_container.sh"
     ]
   }
 }
@@ -142,7 +141,6 @@ resource "google_compute_instance" "sacrificial_vm" {
 
     }
   }
-
 }
 
 resource "google_compute_instance" "logger_vm" {
