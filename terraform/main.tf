@@ -89,46 +89,6 @@ resource "google_compute_firewall" "firewall_sacrificial_no_egress" {
   }
 }
 
-resource "google_compute_instance" "gateway_vm" {
-  name         = "gateway-vm"
-  machine_type = var.machine_type
-  tags         = ["gateway"]
-
-  boot_disk {
-    initialize_params {
-      image = "ubuntu-with-docker-image"
-    }
-  }
-
-  network_interface {
-    subnetwork = google_compute_subnetwork.gateway_subnet.self_link
-    network_ip = "10.0.0.10"
-    access_config {
-
-    }
-  }
-
-  connection {
-    type        = "ssh"
-    user        = "deployer"
-    private_key = file("./deployer_key")
-    host        = self.network_interface.0.access_config.0.nat_ip
-  }
-
-  provisioner "file" {
-    source      = "./files/containerssh_config.yaml"
-    destination = "./containerssh_config.yaml"
-  }
-
-  provisioner "remote-exec" {
-    scripts = [
-      "./scripts/setup_ca.sh",
-      "./scripts/download_node_exporter.sh",
-      "./scripts/run_node_exporter.sh",
-    ]
-  }
-}
-
 resource "google_compute_instance" "sacrificial_vm" {
   name         = "sacrificial-vm"
   machine_type = var.machine_type
@@ -166,23 +126,95 @@ resource "google_compute_instance" "logger_vm" {
     }
   }
 
-  # Prometheus config
+  connection {
+    type        = "ssh"
+    user        = "deployer"
+    private_key = file("./deployer_key")
+    host        = google_compute_instance.logger_vm.network_interface.0.access_config.0.nat_ip
+  }
+
   provisioner "file" {
     source      = "./files/prometheus.yml" # relative to terraform work_dir
     destination = "./prometheus.yml"       # relative to remote $HOME
+  }
+}
+
+resource "google_compute_instance" "gateway_vm" {
+  name         = "gateway-vm"
+  machine_type = var.machine_type
+  tags         = ["gateway"]
+
+  boot_disk {
+    initialize_params {
+      image = "ubuntu-with-docker-image"
+    }
+  }
+
+  network_interface {
+    subnetwork = google_compute_subnetwork.gateway_subnet.self_link
+    network_ip = "10.0.0.10"
+    access_config {
+
+    }
   }
 
   connection {
     type        = "ssh"
     user        = "deployer"
     private_key = file("./deployer_key")
-    host        = self.network_interface.0.access_config.0.nat_ip
+    host        = google_compute_instance.gateway_vm.network_interface.0.access_config.0.nat_ip
+  }
+
+  provisioner "file" {
+    source      = "./files/config.yaml"
+    destination = "./config.yaml"
+  }
+}
+resource "null_resource" "configure_everything" {
+  provisioner "remote-exec" {
+    connection {
+      type        = "ssh"
+      user        = "deployer"
+      private_key = file("./deployer_key")
+      host        = google_compute_instance.sacrificial_vm.network_interface.0.access_config.0.nat_ip
+    }
+
+    scripts = [
+      "./scripts/set_up_ca.sh",
+    ]
   }
 
   provisioner "remote-exec" {
+    connection {
+      type        = "ssh"
+      user        = "deployer"
+      private_key = file("./deployer_key")
+      host        = google_compute_instance.logger_vm.network_interface.0.access_config.0.nat_ip
+    }
+
     scripts = [
       "./scripts/run_minio.sh",
       "./scripts/run_prometheus.sh"
+    ]
+  }
+
+  provisioner "local-exec" {
+    command = "./scripts/move_certs_to_gateway_vm.sh"
+    interpreter = ["/bin/bash"]
+  }
+
+  provisioner "remote-exec" {
+    connection {
+      type        = "ssh"
+      user        = "deployer"
+      private_key = file("./deployer_key")
+      host        = google_compute_instance.gateway_vm.network_interface.0.access_config.0.nat_ip
+    }
+
+    scripts = [
+      "./scripts/download_node_exporter.sh",
+      "./scripts/run_node_exporter.sh",
+      "./scripts/set_up_and_run_containerssh.sh",
     ]
   }
 }

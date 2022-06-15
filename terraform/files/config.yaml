@@ -22,17 +22,8 @@ docker:
   connection:
     host: tcp://sacrificial-vm:2376
     cert: |
-      -----BEGIN CERTIFICATE-----
-      <client certificate here>
-      -----END CERTIFICATE-----
     key: |
-      -----BEGIN RSA PRIVATE KEY-----
-      <client key here>
-      -----END RSA PRIVATE KEY-----
     cacert: |
-      -----BEGIN CERTIFICATE-----
-      <CA certificate here>
-      -----END CERTIFICATE-----
   execution:
     imagePullPolicy: Never
     container:
