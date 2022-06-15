@@ -115,6 +115,11 @@ resource "google_compute_instance" "gateway_vm" {
     host        = self.network_interface.0.access_config.0.nat_ip
   }
 
+  provisioner "file" {
+    source      = "./files/containerssh_config.yaml"
+    destination = "./containerssh_config.yaml"
+  }
+
   provisioner "remote-exec" {
     scripts = [
       "./scripts/setup_ca.sh",

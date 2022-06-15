@@ -141,11 +141,11 @@ This step allows the gateway VM to connect to the Docker daemon on sacrificial V
    subject=CN = sacrificial-vm.europe-west3-c.c.containerssh.internal
    ```
 
-1. Now you should have the following files
+1. Verify if you have all required files
 
    ```bash
-   $ ls -a ~/ca
-   .  ..  ca-key.pem  ca.pem  cert.pem  key.pem  openssl.conf  passphrase  server-cert.pem  server-key.pem
+   $ ls
+   ca-key.pem  ca.pem  extfile.cnf  openssl.conf  passphrase  server-cert.pem  server-key.pem  server.csr
    ```
 
 #### 2.2 Client authentication
