@@ -89,6 +89,38 @@ resource "google_compute_firewall" "firewall_sacrificial_no_egress" {
   }
 }
 
+resource "google_compute_instance" "gateway_vm" {
+  name         = "gateway-vm"
+  machine_type = var.machine_type
+  tags         = ["gateway"]
+
+  boot_disk {
+    initialize_params {
+      image = "ubuntu-with-docker-image"
+    }
+  }
+
+  network_interface {
+    subnetwork = google_compute_subnetwork.gateway_subnet.self_link
+    network_ip = "10.0.0.10"
+    access_config {
+
+    }
+  }
+
+  connection {
+    type        = "ssh"
+    user        = "deployer"
+    private_key = file("./deployer_key")
+    host        = google_compute_instance.gateway_vm.network_interface.0.access_config.0.nat_ip
+  }
+
+  provisioner "file" {
+    source      = "./files/config.yaml"
+    destination = "./config.yaml"
+  }
+}
+
 resource "google_compute_instance" "sacrificial_vm" {
   name         = "sacrificial-vm"
   machine_type = var.machine_type
@@ -139,37 +171,6 @@ resource "google_compute_instance" "logger_vm" {
   }
 }
 
-resource "google_compute_instance" "gateway_vm" {
-  name         = "gateway-vm"
-  machine_type = var.machine_type
-  tags         = ["gateway"]
-
-  boot_disk {
-    initialize_params {
-      image = "ubuntu-with-docker-image"
-    }
-  }
-
-  network_interface {
-    subnetwork = google_compute_subnetwork.gateway_subnet.self_link
-    network_ip = "10.0.0.10"
-    access_config {
-
-    }
-  }
-
-  connection {
-    type        = "ssh"
-    user        = "deployer"
-    private_key = file("./deployer_key")
-    host        = google_compute_instance.gateway_vm.network_interface.0.access_config.0.nat_ip
-  }
-
-  provisioner "file" {
-    source      = "./files/config.yaml"
-    destination = "./config.yaml"
-  }
-}
 resource "null_resource" "configure_everything" {
   provisioner "remote-exec" {
     connection {
@@ -199,7 +200,7 @@ resource "null_resource" "configure_everything" {
   }
 
   provisioner "local-exec" {
-    command = "./scripts/move_certs_to_gateway_vm.sh"
+    command     = "./scripts/move_certs_to_gateway_vm.sh"
     interpreter = ["/bin/bash"]
   }
 

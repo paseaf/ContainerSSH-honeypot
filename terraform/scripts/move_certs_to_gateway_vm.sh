@@ -1,7 +1,5 @@
 #!/bin/bash
-
 set -euxo pipefail
-
 export DEBIAN_FRONTEND=noninteractive
 
 # create a temp folder for key files
