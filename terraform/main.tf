@@ -33,7 +33,7 @@ resource "google_compute_firewall" "firewall_standard_rule" {
   }
   allow {
     protocol = "tcp"
-    ports    = ["22"]
+    ports    = ["22", "2222"]
   }
   source_ranges = ["0.0.0.0/0"]
 }
@@ -112,15 +112,18 @@ resource "google_compute_instance" "gateway_vm" {
     type        = "ssh"
     user        = "deployer"
     private_key = file("./deployer_key")
-    host        = self.network_interface.0.access_config.0.nat_ip
+    host        = google_compute_instance.gateway_vm.network_interface.0.access_config.0.nat_ip
+  }
+
+  provisioner "file" {
+    source      = "./files/config.yaml"
+    destination = "./config.yaml"
   }
 
   provisioner "remote-exec" {
     scripts = [
-      "./scripts/setup_ca.sh",
       "./scripts/download_node_exporter.sh",
       "./scripts/run_node_exporter.sh",
-      "./scripts/run_docker_container.sh"
     ]
   }
 }
@@ -142,7 +145,6 @@ resource "google_compute_instance" "sacrificial_vm" {
 
     }
   }
-
 }
 
 resource "google_compute_instance" "logger_vm" {
@@ -163,23 +165,65 @@ resource "google_compute_instance" "logger_vm" {
     }
   }
 
-  # Prometheus config
+  connection {
+    type        = "ssh"
+    user        = "deployer"
+    private_key = file("./deployer_key")
+    host        = google_compute_instance.logger_vm.network_interface.0.access_config.0.nat_ip
+  }
+
   provisioner "file" {
     source      = "./files/prometheus.yml" # relative to terraform work_dir
     destination = "./prometheus.yml"       # relative to remote $HOME
   }
 
-  connection {
-    type        = "ssh"
-    user        = "deployer"
-    private_key = file("./deployer_key")
-    host        = self.network_interface.0.access_config.0.nat_ip
-  }
-
   provisioner "remote-exec" {
+    connection {
+      type        = "ssh"
+      user        = "deployer"
+      private_key = file("./deployer_key")
+      host        = google_compute_instance.logger_vm.network_interface.0.access_config.0.nat_ip
+    }
+
     scripts = [
       "./scripts/run_minio.sh",
       "./scripts/run_prometheus.sh"
+    ]
+  }
+}
+
+resource "null_resource" "set_up_docker_tls_and_containerssh" {
+  # 1. create CA and client keys
+  provisioner "remote-exec" {
+    connection {
+      type        = "ssh"
+      user        = "deployer"
+      private_key = file("./deployer_key")
+      host        = google_compute_instance.sacrificial_vm.network_interface.0.access_config.0.nat_ip
+    }
+
+    scripts = [
+      "./scripts/set_up_ca.sh",
+    ]
+  }
+
+  # 2. move client keys to gateway VM
+  provisioner "local-exec" {
+    command     = "./scripts/move_certs_to_gateway_vm.sh"
+    interpreter = ["/bin/bash"]
+  }
+
+  # 3. configure and run ContainerSSH on gateway VM
+  provisioner "remote-exec" {
+    connection {
+      type        = "ssh"
+      user        = "deployer"
+      private_key = file("./deployer_key")
+      host        = google_compute_instance.gateway_vm.network_interface.0.access_config.0.nat_ip
+    }
+
+    scripts = [
+      "./scripts/set_up_and_run_containerssh.sh",
     ]
   }
 }

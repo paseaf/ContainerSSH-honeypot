@@ -60,19 +60,12 @@ build {
 
   provisioner "shell" {
     inline = [
-      "mkdir -p /home/deployer/files",
-      "mkdir -p /home/deployer/scripts",
-      "mkdir -p /srv/containerssh/"
+      "mkdir -p /home/deployer/scripts"
     ]
   }
 
   provisioner "file" {
     source      = "./scripts"
-    destination = "/home/deployer/"
-  }
-
-  provisioner "file" {
-    source      = "./files"
     destination = "/home/deployer/"
   }
 
@@ -83,7 +76,6 @@ build {
 
   provisioner "shell" {
     scripts = [
-      "./scripts/containerssh_config.sh",
       "./scripts/install_docker.sh"
     ]
   }

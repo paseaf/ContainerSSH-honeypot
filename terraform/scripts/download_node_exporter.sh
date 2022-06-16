@@ -1,7 +1,5 @@
 #!/bin/bash
-
 set -euxo pipefail
-
 export DEBIAN_FRONTEND=noninteractive
 
 readonly VERSION=1.3.1
