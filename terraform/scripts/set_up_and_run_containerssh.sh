@@ -16,7 +16,7 @@ cp ~/config.yaml /tmp/config.yaml
 sed 's/^/      /' ~/.docker/cert.pem > /tmp/cert.pem
 sed 's/^/      /' ~/.docker/key.pem > /tmp/key.pem
 sed 's/^/      /' ~/.docker/ca.pem > /tmp/ca.pem
-# append keys
+# append indented keys
 sed -i '/ cert: |/r /tmp/cert.pem' /tmp/config.yaml
 sed -i '/ key: |/r /tmp/key.pem' /tmp/config.yaml
 sed -i '/ cacert: |/r /tmp/ca.pem' /tmp/config.yaml

@@ -58,7 +58,7 @@ terraform apply
 Terraform will now create resources and deploy all services on GCP.
 Deployment should take around 3 minutes.
 
-When complete, you can access the honeypot via
+When complete, access the honeypot via
 
 ```bash
 ssh -oHostKeyAlgorithms=+ssh-rsa \
