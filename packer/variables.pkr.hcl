@@ -6,4 +6,5 @@
 variable "project_id" {
   type        = string
   description = "Your GCP project ID"
+  default     = "containerssh-352007"
 }

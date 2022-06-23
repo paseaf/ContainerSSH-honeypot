@@ -29,6 +29,17 @@ scrape_configs:
       - targets: ["localhost:9090"]
 
   # expose node exporter metrics
-  - job_name: "nodeexporter"
+  - job_name: "nodeexporter-gateway-vm"
     static_configs:
       - targets: ["gateway-vm:9100"]
+  
+  # expose node exporter metrics
+  - job_name: "nodeexporter-logger-vm"
+    static_configs:
+      - targets: ["logger-vm:9100"]
+  
+  # expose node exporter metrics
+  - job_name: "nodeexporter-sacrificial-vm"
+    static_configs:
+      - targets: ["sacrificial-vm:9100"]
+  

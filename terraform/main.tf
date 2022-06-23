@@ -77,6 +77,34 @@ resource "google_compute_firewall" "firewall_sacrificial_exception" {
   }
 }
 
+# open sacrificial-port 9100 to our prometheus
+resource "google_compute_firewall" "firewall_sacrificial_nodeexport" {
+  name    = "firewall-sacrificial-nodeexport"
+  network = google_compute_network.main.self_link
+
+  allow {
+    protocol = "tcp"
+    ports    = ["9100"]
+  }
+
+  target_tags = ["sacrificial"]
+  source_tags = ["observer"]
+}
+
+# open logger-port 9100 to our prometheus
+resource "google_compute_firewall" "firewall_logger_nodeexport" {
+  name    = "firewall-logger-nodeexport"
+  network = google_compute_network.main.self_link
+
+  allow {
+    protocol = "tcp"
+    ports    = ["9100"]
+  }
+
+  target_tags = ["observer"]
+  source_tags = ["observer"]
+}
+
 # close all outgoing connection from sacrificial host
 resource "google_compute_firewall" "firewall_sacrificial_no_egress" {
   name               = "firewall-sacrificial-no-egress"
@@ -119,13 +147,6 @@ resource "google_compute_instance" "gateway_vm" {
     source      = "./files/config.yaml"
     destination = "./config.yaml"
   }
-
-  provisioner "remote-exec" {
-    scripts = [
-      "./scripts/download_node_exporter.sh",
-      "./scripts/run_node_exporter.sh",
-    ]
-  }
 }
 
 resource "google_compute_instance" "sacrificial_vm" {
@@ -144,6 +165,13 @@ resource "google_compute_instance" "sacrificial_vm" {
     access_config {
 
     }
+  }
+
+  connection {
+    type        = "ssh"
+    user        = "deployer"
+    private_key = file("./deployer_key")
+    host        = google_compute_instance.sacrificial_vm.network_interface.0.access_config.0.nat_ip
   }
 }
 
@@ -223,7 +251,7 @@ resource "null_resource" "set_up_docker_tls_and_containerssh" {
     }
 
     scripts = [
-      "./scripts/set_up_and_run_containerssh.sh",
+      "./scripts/set_up_and_run_containerssh.sh"
     ]
   }
 }

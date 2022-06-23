@@ -46,9 +46,12 @@ build {
 
   provisioner "shell" {
     scripts = [
+      "./scripts/download_node_exporter.sh",
+      "./scripts/create_node_exporter_service.sh",
       "./scripts/install_docker.sh",
       "./scripts/build_containerssh_guest_image.sh"
     ]
+    expect_disconnect = true
   }
 }
 
@@ -76,7 +79,10 @@ build {
 
   provisioner "shell" {
     scripts = [
+      "./scripts/download_node_exporter.sh",
+      "./scripts/create_node_exporter_service.sh",
       "./scripts/install_docker.sh"
     ]
+    expect_disconnect = true
   }
 }
