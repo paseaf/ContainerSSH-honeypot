@@ -11,7 +11,8 @@ Sacrificial VM provides infrastructure for containers.
 ### Ports
 
 Audit:
-- MinIO: `9090`
+- MinIO server: `9000`
+- MinIO Console: `9090`
 
 Monitoring
 - Grafana: `3000` 
