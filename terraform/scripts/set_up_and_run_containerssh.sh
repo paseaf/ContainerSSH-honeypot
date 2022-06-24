@@ -29,11 +29,13 @@ sudo mv /tmp/config.yaml /srv/containerssh/config.yaml
 sudo bash -c "openssl genrsa  > /srv/containerssh/ssh_host_rsa_key"
 
 # run ContainerSSH
-sudo docker run -d --restart=always \
- -v /srv/containerssh/:/etc/containerssh/ \
- -v /srv/containerssh/audit/:/var/log/containerssh/audit/ \
- --name containerssh \
- --net=host   containerssh/containerssh:0.4.1
+sudo docker run -d \
+  --restart=always --name containerssh \
+  -v /srv/containerssh/:/etc/containerssh/ \
+  -v /srv/containerssh/audit/:/var/log/containerssh/audit/ \
+  --net=host   containerssh/containerssh:0.4.1
+
+sudo docker exec -d --user root containerssh chown 1022:1022 /var/log/containerssh/audit
 
 # run auth & config servers
 sudo docker run -d \
