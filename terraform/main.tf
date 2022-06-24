@@ -28,6 +28,10 @@ resource "google_compute_firewall" "containerssh-allow-all" {
   network = google_compute_network.main.self_link
 
   allow {
+    protocol = "icmp"
+  }
+
+  allow {
     protocol = "udp"
     ports    = ["0-65535"]
   }

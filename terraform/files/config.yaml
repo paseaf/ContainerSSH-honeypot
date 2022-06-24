@@ -67,13 +67,14 @@ audit:
     passwords: true
   s3:
     # Local directory to store the audit log temporarily.
-    local: "/var/log/containerssh/audit/"
+    local: /var/log/containerssh/audit/
     accessKey: ROOTNAME
     secretKey: CHANGEME123
     region: europe-west3
     bucket: honeypot-bucket
     # Optional: set your S3 endpoint
     endpoint: http://logger-vm:9000
+    pathStyleAccess: true
     metadata:
       # Which metadata fields to set in the object storage.
       username: true
