@@ -18,13 +18,10 @@ sudo docker run -d \
    -e "MINIO_SITE_REGION=europe-west3" \
    quay.io/minio/minio server /data --console-address ":9090"
 
-# install minio client
-curl https://dl.min.io/client/mc/release/linux-amd64/mc \
-  --create-dirs \
-  -o "$HOME/minio-binaries/mc"
-
-chmod +x "$HOME/minio-binaries/mc"
-export PATH=$PATH:$HOME/minio-binaries/
+# install minio client for all users
+wget https://dl.min.io/client/mc/release/linux-amd64/mc
+chmod +x mc
+sudo mv mc /usr/local/bin/mc
 
 # configure local connection to local MinIO server
 mc alias set local http://127.0.0.1:9000 $USERNAME $PASSWORD
