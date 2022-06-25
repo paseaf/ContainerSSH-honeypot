@@ -25,7 +25,7 @@ sudo mv mc /usr/local/bin/mc
 
 # configure local connection to local MinIO server
 mc alias set local http://127.0.0.1:9000 $USERNAME $PASSWORD
-# create a default bucket
-mc mb ~/minio/data/honeypot-bucket
+# create a bucket
+mc mb local/honeypot
 
 sleep 1

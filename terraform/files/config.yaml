@@ -71,7 +71,7 @@ audit:
     accessKey: ROOTNAME
     secretKey: CHANGEME123
     region: europe-west3
-    bucket: honeypot-bucket
+    bucket: honeypot
     # Optional: set your S3 endpoint
     endpoint: http://logger-vm:9000
     pathStyleAccess: true
