@@ -883,7 +883,7 @@
       "type": "timeseries"
     }
   ],
-  "refresh": "",
+  "refresh": "5s",
   "schemaVersion": 36,
   "style": "dark",
   "tags": [],
@@ -898,6 +898,6 @@
   "timezone": "browser",
   "title": "containerSSH-Monitoring",
   "uid": "4J6_na37z",
-  "version": 5,
+  "version": 2,
   "weekStart": ""
 }

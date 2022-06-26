@@ -1,10 +1,6 @@
 #!/bin/bash
 set -euxo pipefail
 source /home/deployer/scripts/apt_get_wait_lock.sh
-<<<<<<< HEAD
-
-=======
->>>>>>> c05d527 (finishing monitoring)
 export DEBIAN_FRONTEND=noninteractive
 
 apt-get update
