@@ -44,7 +44,7 @@ resource "google_compute_firewall" "firewall_logger_view" {
   network = google_compute_network.main.self_link
   allow {
     protocol = "tcp"
-    ports    = ["9090", "9091"]
+    ports    = ["3000", "9090", "9091"]
   }
   target_tags   = ["observer"]
   source_ranges = ["0.0.0.0/0"]
@@ -57,7 +57,7 @@ resource "google_compute_firewall" "firewall_gateway_nodeexport" {
 
   allow {
     protocol = "tcp"
-    ports    = ["9100", "9101"]
+    ports    = ["8088", "9100", "9101"]
   }
 
   target_tags = ["gateway"]
@@ -84,7 +84,7 @@ resource "google_compute_firewall" "firewall_sacrificial_nodeexport" {
 
   allow {
     protocol = "tcp"
-    ports    = ["9100"]
+    ports    = ["8080", "9100"]
   }
 
   target_tags = ["sacrificial"]
@@ -98,7 +98,7 @@ resource "google_compute_firewall" "firewall_logger_nodeexport" {
 
   allow {
     protocol = "tcp"
-    ports    = ["9100"]
+    ports    = ["8088", "9100"]
   }
 
   target_tags = ["observer"]
@@ -147,6 +147,12 @@ resource "google_compute_instance" "gateway_vm" {
     source      = "./files/config.yaml"
     destination = "./config.yaml"
   }
+
+  provisioner "remote-exec" {
+    scripts = [
+      "./scripts/run_cadvisor.sh"
+    ]
+  }
 }
 
 resource "google_compute_instance" "sacrificial_vm" {
@@ -165,13 +171,6 @@ resource "google_compute_instance" "sacrificial_vm" {
     access_config {
 
     }
-  }
-
-  connection {
-    type        = "ssh"
-    user        = "deployer"
-    private_key = file("./deployer_key")
-    host        = google_compute_instance.sacrificial_vm.network_interface.0.access_config.0.nat_ip
   }
 }
 
@@ -205,6 +204,12 @@ resource "google_compute_instance" "logger_vm" {
     destination = "./prometheus.yml"       # relative to remote $HOME
   }
 
+  provisioner "file" {
+    source      = "./grafana" # relative to terraform work_dir
+    destination = "./"        # relative to remote $HOME
+  }
+
+
   provisioner "remote-exec" {
     connection {
       type        = "ssh"
@@ -214,8 +219,10 @@ resource "google_compute_instance" "logger_vm" {
     }
 
     scripts = [
+      "./scripts/run_cadvisor.sh",
       "./scripts/run_minio.sh",
-      "./scripts/run_prometheus.sh"
+      "./scripts/run_prometheus.sh",
+      "./scripts/run_grafana.sh"
     ]
   }
 }

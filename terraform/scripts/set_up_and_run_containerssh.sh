@@ -32,6 +32,7 @@ sudo bash -c "openssl genrsa  > /srv/containerssh/ssh_host_rsa_key"
 sudo docker run -d --restart=always \
  -v /srv/containerssh/:/etc/containerssh/ \
  -v /srv/containerssh/audit/:/var/log/containerssh/audit/ \
+ --name containerssh \
  --net=host   containerssh/containerssh:0.4.1
 
 # run auth & config servers
@@ -39,4 +40,5 @@ sudo docker run -d \
   --restart=always \
   -p 127.0.0.1:8080:8080 \
   -e CONTAINERSSH_ALLOW_ALL=1 \
+  --name authconfig \
   containerssh/containerssh-test-authconfig:0.4.1

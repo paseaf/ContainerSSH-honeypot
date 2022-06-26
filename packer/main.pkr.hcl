@@ -53,6 +53,13 @@ build {
     ]
     expect_disconnect = true
   }
+
+  provisioner "shell" {
+    inline = [
+      "apt-get -y install cadvisor"
+    ]
+  }
+
 }
 
 build {

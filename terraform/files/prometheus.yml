@@ -43,3 +43,17 @@ scrape_configs:
     static_configs:
       - targets: ["sacrificial-vm:9100"]
   
+  # expose cadvisor metrics
+  - job_name: "cadvisor-container-on-gateway-vm"
+    static_configs:
+      - targets: ["gateway-vm:8088"]
+
+  # expose cadvisor metrics
+  - job_name: "cadvisor-container-on-logger-vm"
+    static_configs:
+      - targets: ["logger-vm:8088"]
+
+  # expose cadvisor metrics
+  - job_name: "cadvisor-container-on-sacrificial-vm"
+    static_configs:
+      - targets: ["sacrificial-vm:8080"]
