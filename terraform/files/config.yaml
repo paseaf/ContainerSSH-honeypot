@@ -56,6 +56,29 @@ docker:
         /tmp: rw,noexec,nosuid,size=65536k,uid=1000,gid=1000
         /run: rw,noexec,nosuid,size=65536k,uid=1000,gid=1000
         /home/ubuntu: rw,noexec,nosuid,size=65536k,uid=1000,gid=1000
+audit:
+  enable: true
+  format: binary
+  storage: s3
+  intercept:
+    stdin: true
+    stdout: true
+    stderr: true
+    passwords: true
+  s3:
+    # Local directory to store the audit log temporarily.
+    local: /var/log/containerssh/audit/
+    accessKey: ROOTNAME
+    secretKey: CHANGEME123
+    region: europe-west3
+    bucket: honeypot
+    # Optional: set your S3 endpoint
+    endpoint: http://logger-vm:9000
+    pathStyleAccess: true
+    metadata:
+      # Which metadata fields to set in the object storage.
+      username: true
+      ip: true
 auth:
   url: "http://127.0.0.1:8080"
 configserver:

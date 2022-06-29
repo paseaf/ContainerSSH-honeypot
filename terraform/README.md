@@ -86,8 +86,32 @@ gcloud compute instances describe logger-vm \
 
 ### Handy commands
 
+#### SSH to a GCP VM
+
 ```bash
-gcp compute ssh <vm-name> # ssh to a vm (e.g., gateway-vm, logger-vm, sacrificial-vm)
+# ssh to a vm (e.g., gateway-vm, logger-vm, sacrificial-vm)
+gcp compute ssh <vm-name>
+```
+
+#### Managing MinIO with MinIO Client `mc`
+`mc` allows you to manage a MinIO server.
+
+```bash
+# install mc
+wget https://dl.min.io/client/mc/release/linux-amd64/mc
+chmod +x mc
+sudo mv mc /usr/local/bin/mc
+
+# configure local connection to a MinIO server
+mc alias set conn_name http://vm-host:9000 ROOTNAME CHANGEME123
+# check connection status
+mc admin info conn_name
+# list buckets on a connection
+mc ls conn_name
+# add buckets to a connection
+mc mb conn_name/bucket_name
+# copy a file to a bucket
+mc cp local_file conn_name/bucket_name
 ```
 
 ## Troubleshooting

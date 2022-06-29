@@ -28,12 +28,15 @@ sudo mv /tmp/config.yaml /srv/containerssh/config.yaml
 # generate a private key
 sudo bash -c "openssl genrsa  > /srv/containerssh/ssh_host_rsa_key"
 
+# give ContainerSSH access to the audit directory
+sudo chown 1022:1022 /srv/containerssh/audit
+
 # run ContainerSSH
-sudo docker run -d --restart=always \
- -v /srv/containerssh/:/etc/containerssh/ \
- -v /srv/containerssh/audit/:/var/log/containerssh/audit/ \
- --name containerssh \
- --net=host   containerssh/containerssh:0.4.1
+sudo docker run -d \
+  --restart=always --name containerssh \
+  -v /srv/containerssh/:/etc/containerssh/ \
+  -v /srv/containerssh/audit/:/var/log/containerssh/audit/ \
+  --net=host   containerssh/containerssh:0.4.1
 
 # run auth & config servers
 sudo docker run -d \

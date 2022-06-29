@@ -7,7 +7,7 @@ provider "google" {
 }
 
 resource "google_compute_network" "main" {
-  name                    = "main-network"
+  name                    = "containerssh"
   auto_create_subnetworks = false
 }
 
@@ -23,18 +23,24 @@ resource "google_compute_subnetwork" "honeypot_subnet" {
   network       = google_compute_network.main.self_link
 }
 
-# standard firewall settings
-resource "google_compute_firewall" "firewall_standard_rule" {
-  name    = "firewall-standard-rule"
+resource "google_compute_firewall" "containerssh-allow-all" {
+  name    = "containerssh-allow-all"
   network = google_compute_network.main.self_link
 
   allow {
     protocol = "icmp"
   }
+
+  allow {
+    protocol = "udp"
+    ports    = ["0-65535"]
+  }
+
   allow {
     protocol = "tcp"
-    ports    = ["22", "2222"]
+    ports    = ["0-65535"]
   }
+
   source_ranges = ["0.0.0.0/0"]
 }
 
