@@ -5,7 +5,6 @@ export DEBIAN_FRONTEND=noninteractive
 
 # create user for node exporter
 useradd -m node_exporter
-#groupadd node_exporter
 usermod -a -G node_exporter node_exporter
 
 mv /home/deployer/node_exporter /usr/local/bin

@@ -12,7 +12,7 @@ source "googlecompute" "ubuntu-2204" {
   source_image_family = "ubuntu-pro-2204-lts"
   ssh_username        = "root"
   zone                = "europe-west3-c"
-  account_file        = "./gcp.key.json"
+  account_file        = var.credentials
   machine_type        = "e2-small"
 }
 

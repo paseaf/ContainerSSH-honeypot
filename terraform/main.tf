@@ -91,20 +91,6 @@ resource "google_compute_firewall" "firewall_sacrificial_nodeexport" {
   source_tags = ["observer"]
 }
 
-# open logger-port 9100 to our prometheus
-resource "google_compute_firewall" "firewall_logger_nodeexport" {
-  name    = "firewall-logger-nodeexport"
-  network = google_compute_network.main.self_link
-
-  allow {
-    protocol = "tcp"
-    ports    = ["8088", "9100"]
-  }
-
-  target_tags = ["observer"]
-  source_tags = ["observer"]
-}
-
 # close all outgoing connection from sacrificial host
 resource "google_compute_firewall" "firewall_sacrificial_no_egress" {
   name               = "firewall-sacrificial-no-egress"
@@ -150,7 +136,7 @@ resource "google_compute_instance" "gateway_vm" {
 
   provisioner "remote-exec" {
     scripts = [
-      "./scripts/run_cadvisor.sh"
+      "./scripts/run_cadvisor.sh" 
     ]
   }
 }
@@ -208,7 +194,6 @@ resource "google_compute_instance" "logger_vm" {
     source      = "./grafana" # relative to terraform work_dir
     destination = "./"        # relative to remote $HOME
   }
-
 
   provisioner "remote-exec" {
     connection {

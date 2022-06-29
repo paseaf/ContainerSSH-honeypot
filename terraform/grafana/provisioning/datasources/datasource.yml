@@ -7,3 +7,4 @@ datasources:
     # Access mode - proxy (server in the UI) or direct (browser in the UI).
     access: proxy
     url: http://logger-vm:9091
+    

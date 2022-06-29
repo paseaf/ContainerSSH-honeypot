@@ -1,4 +1,0 @@
-packer/variables.pkr.hcl
-backup
-packer/variables.pkr.hcl
-terraform/variables.tf
