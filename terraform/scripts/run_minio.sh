@@ -7,7 +7,7 @@ mkdir -p ~/minio/data
 sudo docker run -d \
    -p 9000:9000 \
    -p 9090:9090 \
-   --name minio \
+   --name minIO \
    -v ~/minio/data:/data \
    -e "MINIO_ROOT_USER=ROOTNAME" \
    -e "MINIO_ROOT_PASSWORD=CHANGEME123" \

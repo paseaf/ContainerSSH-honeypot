@@ -44,7 +44,7 @@ resource "google_compute_firewall" "firewall_logger_view" {
   network = google_compute_network.main.self_link
   allow {
     protocol = "tcp"
-    ports    = ["9090", "9091"]
+    ports    = ["3000", "9090", "9091"]
   }
   target_tags   = ["observer"]
   source_ranges = ["0.0.0.0/0"]
@@ -57,7 +57,7 @@ resource "google_compute_firewall" "firewall_gateway_nodeexport" {
 
   allow {
     protocol = "tcp"
-    ports    = ["9100", "9101"]
+    ports    = ["8088", "9100", "9101"]
   }
 
   target_tags = ["gateway"]
@@ -75,6 +75,20 @@ resource "google_compute_firewall" "firewall_sacrificial_exception" {
     protocol = "tcp"
     ports    = ["2376"]
   }
+}
+
+# open sacrificial-port 9100 to our prometheus
+resource "google_compute_firewall" "firewall_sacrificial_nodeexport" {
+  name    = "firewall-sacrificial-nodeexport"
+  network = google_compute_network.main.self_link
+
+  allow {
+    protocol = "tcp"
+    ports    = ["8080", "9100"]
+  }
+
+  target_tags = ["sacrificial"]
+  source_tags = ["observer"]
 }
 
 # close all outgoing connection from sacrificial host
@@ -122,8 +136,7 @@ resource "google_compute_instance" "gateway_vm" {
 
   provisioner "remote-exec" {
     scripts = [
-      "./scripts/download_node_exporter.sh",
-      "./scripts/run_node_exporter.sh",
+      "./scripts/run_cadvisor.sh" 
     ]
   }
 }
@@ -177,6 +190,11 @@ resource "google_compute_instance" "logger_vm" {
     destination = "./prometheus.yml"       # relative to remote $HOME
   }
 
+  provisioner "file" {
+    source      = "./grafana" # relative to terraform work_dir
+    destination = "./"        # relative to remote $HOME
+  }
+
   provisioner "remote-exec" {
     connection {
       type        = "ssh"
@@ -186,8 +204,10 @@ resource "google_compute_instance" "logger_vm" {
     }
 
     scripts = [
+      "./scripts/run_cadvisor.sh",
       "./scripts/run_minio.sh",
-      "./scripts/run_prometheus.sh"
+      "./scripts/run_prometheus.sh",
+      "./scripts/run_grafana.sh"
     ]
   }
 }
@@ -223,7 +243,7 @@ resource "null_resource" "set_up_docker_tls_and_containerssh" {
     }
 
     scripts = [
-      "./scripts/set_up_and_run_containerssh.sh",
+      "./scripts/set_up_and_run_containerssh.sh"
     ]
   }
 }

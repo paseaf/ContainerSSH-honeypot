@@ -12,7 +12,7 @@ source "googlecompute" "ubuntu-2204" {
   source_image_family = "ubuntu-pro-2204-lts"
   ssh_username        = "root"
   zone                = "europe-west3-c"
-  account_file        = "./gcp.key.json"
+  account_file        = var.credentials
   machine_type        = "e2-small"
 }
 
@@ -46,10 +46,20 @@ build {
 
   provisioner "shell" {
     scripts = [
+      "./scripts/download_node_exporter.sh",
+      "./scripts/create_node_exporter_service.sh",
       "./scripts/install_docker.sh",
       "./scripts/build_containerssh_guest_image.sh"
     ]
+    expect_disconnect = true
   }
+
+  provisioner "shell" {
+    inline = [
+      "apt-get -y install cadvisor"
+    ]
+  }
+
 }
 
 build {
@@ -76,7 +86,10 @@ build {
 
   provisioner "shell" {
     scripts = [
+      "./scripts/download_node_exporter.sh",
+      "./scripts/create_node_exporter_service.sh",
       "./scripts/install_docker.sh"
     ]
+    expect_disconnect = true
   }
 }
