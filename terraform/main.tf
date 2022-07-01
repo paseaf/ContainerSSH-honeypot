@@ -142,7 +142,7 @@ resource "google_compute_instance" "gateway_vm" {
 
   provisioner "remote-exec" {
     scripts = [
-      "./scripts/run_cadvisor.sh" 
+      "./scripts/run_cadvisor.sh"
     ]
   }
 }
@@ -170,6 +170,7 @@ resource "google_compute_instance" "logger_vm" {
   name         = "logger-vm"
   machine_type = var.machine_type
   tags         = ["observer"]
+
   boot_disk {
     initialize_params {
       image = "ubuntu-with-docker-image"
@@ -191,6 +192,16 @@ resource "google_compute_instance" "logger_vm" {
     host        = google_compute_instance.logger_vm.network_interface.0.access_config.0.nat_ip
   }
 
+  provisioner "local-exec" {
+    command     = "./generate_credentials.sh"
+    interpreter = ["/bin/bash"]
+  }
+
+  provisioner "file" {
+    source      = "./.env" # relative to terraform work_dir
+    destination = "./.env" # relative to remote $HOME
+  }
+
   provisioner "file" {
     source      = "./files/prometheus.yml" # relative to terraform work_dir
     destination = "./prometheus.yml"       # relative to remote $HOME
@@ -202,13 +213,6 @@ resource "google_compute_instance" "logger_vm" {
   }
 
   provisioner "remote-exec" {
-    connection {
-      type        = "ssh"
-      user        = "deployer"
-      private_key = file("./deployer_key")
-      host        = google_compute_instance.logger_vm.network_interface.0.access_config.0.nat_ip
-    }
-
     scripts = [
       "./scripts/run_cadvisor.sh",
       "./scripts/run_minio.sh",
@@ -218,6 +222,7 @@ resource "google_compute_instance" "logger_vm" {
   }
 }
 
+# Note: provisioner in this block only runs after all previous provisioners are finished
 resource "null_resource" "set_up_docker_tls_and_containerssh" {
   # 1. create CA and client keys
   provisioner "remote-exec" {

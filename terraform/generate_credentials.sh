@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 
-readonly TARGET_FILE="./scripts/export_credentials.sh"
+readonly TARGET_FILE="./.env"
 
 # check for input options
 force_write=0
@@ -13,9 +13,9 @@ fi
 
 # exit if file already exists
 if [[ -f "$TARGET_FILE" && $force_write -eq 0 ]]; then
-   echo "[Error] '$TARGET_FILE' already exists!" >&2
-   echo "Use '--force' or '-f' to overwrite it." >&2
-   exit 1
+   echo "Skipped!. File '$TARGET_FILE' already exists."
+   echo "To overwrite the file, use '--force' or '-f'."
+   exit 0
 fi
 
 # set and generate credentials
@@ -25,11 +25,10 @@ MINIO_ROOT_PASSWORD=$(openssl rand -base64 32)
 # write to file
 cat <<EOF > "$TARGET_FILE"
 #!/bin/bash
-set -euxo pipefail
 
-export MINIO_ROOT_USER=$MINIO_ROOT_USER
-export MINIO_ROOT_PASSWORD="$MINIO_ROOT_PASSWORD"
+MINIO_ROOT_USER="$MINIO_ROOT_USER"
+MINIO_ROOT_PASSWORD="$MINIO_ROOT_PASSWORD"
 EOF
 
 echo "SUCCESS!"
-echo "File has been exported to '$TARGET_FILE'"
+echo "Credentials has been written to '$TARGET_FILE'"
