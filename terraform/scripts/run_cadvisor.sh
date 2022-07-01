@@ -14,7 +14,7 @@ sudo docker run \
   --volume=/dev/disk/:/dev/disk:ro \
   --publish=8088:8080 \
   --detach=true \
-  --name=$HOSTNAME-cadvisor \
+  --name="$HOSTNAME-cadvisor" \
   --privileged \
   --device=/dev/kmsg \
-  gcr.io/cadvisor/cadvisor:$VERSION
+  gcr.io/cadvisor/cadvisor:"$VERSION"
