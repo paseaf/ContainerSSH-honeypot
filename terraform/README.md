@@ -91,7 +91,7 @@ chmod +x mc
 sudo mv mc /usr/local/bin/mc
 
 # configure local connection to a MinIO server
-mc alias set conn_name http://vm-host:9000 ROOTNAME CHANGEME123
+mc alias set conn_name http://vm-host:9000 <MINIO_ROOT_USER> <MINIO_ROOT_PASSWORD>
 # check connection status
 mc admin info conn_name
 # list buckets on a connection

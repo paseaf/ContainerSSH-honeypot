@@ -246,7 +246,19 @@ resource "null_resource" "set_up_docker_tls_and_containerssh" {
     interpreter = ["/bin/bash"]
   }
 
-  # 3. configure and run ContainerSSH on gateway VM
+  # 3. move MinIO credentials to Gateway VM
+  provisioner "file" {
+    connection {
+      type        = "ssh"
+      user        = "deployer"
+      private_key = file("./deployer_key")
+      host        = google_compute_instance.gateway_vm.network_interface.0.access_config.0.nat_ip
+    }
+    source      = "./credentials.txt" # relative to terraform work_dir
+    destination = "./.env"            # relative to remote $HOME
+  }
+
+  # 4. configure and run ContainerSSH on gateway VM
   provisioner "remote-exec" {
     connection {
       type        = "ssh"
