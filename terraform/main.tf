@@ -198,8 +198,8 @@ resource "google_compute_instance" "logger_vm" {
   }
 
   provisioner "file" {
-    source      = "./.env" # relative to terraform work_dir
-    destination = "./.env" # relative to remote $HOME
+    source      = "./credentials.txt" # relative to terraform work_dir
+    destination = "./.env"            # relative to remote $HOME
   }
 
   provisioner "file" {

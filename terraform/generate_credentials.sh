@@ -1,7 +1,11 @@
 #!/bin/bash
 set -euo pipefail
 
-readonly TARGET_FILE="./.env"
+###
+# This file generates credentials locally used for our services
+###
+
+readonly TARGET_FILE="./credentials.txt"
 
 # check for input options
 force_write=0
@@ -22,10 +26,8 @@ fi
 MINIO_ROOT_USER="ROOTNAME"
 MINIO_ROOT_PASSWORD=$(openssl rand -base64 32)
 
-# write to file
+# write credentials to a file
 cat <<EOF > "$TARGET_FILE"
-#!/bin/bash
-
 MINIO_ROOT_USER="$MINIO_ROOT_USER"
 MINIO_ROOT_PASSWORD="$MINIO_ROOT_PASSWORD"
 EOF
