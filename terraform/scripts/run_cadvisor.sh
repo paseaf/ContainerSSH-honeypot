@@ -13,4 +13,4 @@ sudo docker run \
   --name="$HOSTNAME-cadvisor" \
   --privileged \
   --device=/dev/kmsg \
-  cadvisor:latest # pre-pulled image in Packer
+  cadvisor:latest # image pre-pulled in Packer

@@ -53,7 +53,7 @@ Utilities:
 All SSH interactions with the honeypot are audited and logged.\
 To access the log:
 
-1. In your brwoser, open MinIO Console at `http://{logger vm IP}:9090`.
+1. In your browser, open MinIO Console at `http://{logger vm IP}:9090`.
 
    - Get the logger VM IP via
      ```bash
@@ -77,7 +77,7 @@ Note: [this SSH guide](https://containerssh.io/development/containerssh/ssh/) ma
 ### Monitor system status
 
 We use Prometheus to collect hardware and OS metrics.
-We use Grafana for visualizing the collected data.
+We use Grafana for visualizing the collected metrics.
 
 - Grafana: `http://<logger vm IP>:3000`
 - Prometheus: `http://<logger vm IP>:9091`
@@ -86,7 +86,7 @@ To get logger-vm IP address:
 
 ```bash
 gcloud compute instances describe logger-vm \
---format='get(networkInterfaces[0].accessConfigs[0].natIP)'
+  --format='get(networkInterfaces[0].accessConfigs[0].natIP)'
 ```
 
 ## Troubleshooting

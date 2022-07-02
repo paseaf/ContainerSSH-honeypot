@@ -13,9 +13,4 @@ nohup sudo dockerd \
    -H=0.0.0.0:2376 \
    &> dockerd.log &
 
-# # Make docker work locally
-# mkdir .docker
-# cp {ca,cert,key}.pem .docker/
-# echo "export DOCKER_HOST=tcp://sacrificial-vm:2376 DOCKER_TLS_VERIFY=1" >> ~/.bashrc
-
 sleep 1

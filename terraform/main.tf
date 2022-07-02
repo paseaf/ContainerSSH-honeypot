@@ -235,7 +235,7 @@ resource "null_resource" "set_up_docker_tls_and_containerssh" {
 
     scripts = [
       "./scripts/set_up_ca.sh",
-      "./scripts/start_docker_tls.sh",
+      "./scripts/restart_dockerd_with_tls.sh",
       "./scripts/run_cadvisor.sh"
     ]
   }
