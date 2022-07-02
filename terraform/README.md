@@ -64,7 +64,7 @@ When complete, access the honeypot via
 ssh -oHostKeyAlgorithms=+ssh-rsa \
   $(gcloud compute instances describe gateway-vm \
   --format='get(networkInterfaces[0].accessConfigs[0].natIP)' \
-  --zone=europe-west3-c) -p 2222
+  --zone=europe-west3-c)
 ```
 
 You should be able to log in with any password.

@@ -10,6 +10,11 @@ Sacrificial VM provides infrastructure for containers.
 
 ### Ports
 
+SSH:
+- Gateway VM SSH Honeypot: `2222`, `22`
+- Gateway VM SSHD: `2333`
+- Other VMs SSHD: `22`
+
 Audit:
 
 - MinIO server: `9000`
@@ -44,7 +49,7 @@ Utilities:
    ssh -oHostKeyAlgorithms=+ssh-rsa \
      $(gcloud compute instances describe gateway-vm \
      --format='get(networkInterfaces[0].accessConfigs[0].natIP)' \
-     --zone=europe-west3-c) -p 2222
+     --zone=europe-west3-c)
    ```
    Your will be redirected to a newly created container in the sacrificial VM.
 
