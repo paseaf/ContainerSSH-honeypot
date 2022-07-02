@@ -57,7 +57,7 @@ To access the log:
 
    - Get the logger VM IP via
      ```bash
-     gcloud compute instances describe gateway-vm \
+     gcloud compute instances describe logger-vm \
        --format='get(networkInterfaces[0].accessConfigs[0].natIP)' \
        --zone=europe-west3-c
      ```
@@ -86,7 +86,7 @@ We use Grafana for visualizing the collected metrics.
 To get logger-vm IP address:
 
 ```bash
-gcloud compute instances describe gateway-vm \
+gcloud compute instances describe logger-vm \
   --format='get(networkInterfaces[0].accessConfigs[0].natIP)' \
   --zone=europe-west3-c
 ```

@@ -268,7 +268,8 @@ resource "null_resource" "set_up_docker_tls_and_containerssh" {
     }
 
     scripts = [
-      "./scripts/set_up_and_run_containerssh.sh"
+      "./scripts/set_up_and_run_containerssh.sh",
+      "./scripts/remap_ssh_ports.sh"
     ]
   }
 }
