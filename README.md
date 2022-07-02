@@ -11,19 +11,22 @@ Sacrificial VM provides infrastructure for containers.
 ### Ports
 
 Audit:
+
 - MinIO server: `9000`
 - MinIO Console: `9090`
 
 Monitoring
-- Grafana: `3000` 
+
+- Grafana: `3000`
 - Prometheus: `9091`
 
 Services:
+
 - Auth-Config: `8080`
 - containerSSH Audit-logs: `9101`
 
-
 Utilities:
+
 - Cadvisor on Gateway-VM: `8088`
 - Cadvisor on Logger-VM: `8088`
 - Cadvisor on Sacrificial-VM: `8080`
@@ -36,6 +39,8 @@ Utilities:
 
 ## Trying out the honeypot
 
+### SSH into the honeypot and download your audit log
+
 1. SSH to the gateway VM from your local computer
    ```bash
    ssh -oHostKeyAlgorithms=+ssh-rsa \
@@ -43,25 +48,52 @@ Utilities:
      --format='get(networkInterfaces[0].accessConfigs[0].natIP)') \
      -p 2222
    ```
-   Do whatever you like, then exit
-1. Log in to MinIO Console at `http://{logger vm IP}:9090` in your browser.
+   Your will be redirected to a newly created container in the sacrificial VM.
+
+### Download audit log from MinIO Console
+
+All SSH interactions with the honeypot are audited and logged.\
+To access the log:
+
+1. In your brwoser, open MinIO Console at `http://{logger vm IP}:9090`.
+
    - Get the logger VM IP via
      ```bash
      gcloud compute instances describe logger-vm \
      --format='get(networkInterfaces[0].accessConfigs[0].natIP)'
      ```
-   - MinIO Console default credentials
-     - Username: `ROOTNAME`
-     - Password: `CHANGEME123`
-1. You should see a new record in the `containerssh` bucket. Download it.
+
+1. Log in with credentials generated at `./terraform/credentials.txt`
+
+   ```
+   MINIO_ROOT_USER="your_user_name"
+   MINIO_ROOT_PASSWORD="your_password"
+   ```
+
+1. You should see records in the `containerssh` bucket. Download a record you want to analyze.
 1. Decode the record with `containerssh-auditlog-decoder` from https://github.com/ContainerSSH/ContainerSSH/releases/tag/v0.4.1, or implement your own decoder.\
    Read more about the record format [here](https://containerssh.io/reference/audit/#the-binary-format-recommended).
 
-Note: [this SSH guide](https://containerssh.io/development/containerssh/ssh/) may help you understand the SSH log.
+Note: [this SSH guide](https://containerssh.io/development/containerssh/ssh/) may help you understand the audit log.
+
+### Monitor system status
+
+We use Prometheus to collect hardware and OS metrics.
+We use Grafana for visualizing the collected data.
+
+- Grafana: `http://<logger vm IP>:3000`
+- Prometheus: `http://<logger vm IP>:9091`
+
+To get logger-vm IP address:
+
+```bash
+gcloud compute instances describe logger-vm \
+--format='get(networkInterfaces[0].accessConfigs[0].natIP)'
+```
 
 ## Troubleshooting
 
 GCloud notes
 
 - If `gcloud` failed when installing components:\
-  Install `gcloud` with [interactive](https://cloud.google.com/sdk/docs/downloads-interactive#linux-mac). The one with `dnf` doesn't allow installing components.
+  Install `gcloud` with [interactive](https://cloud.google.com/sdk/docs/downloads-interactive#linux-mac). (worked for Fedora)
