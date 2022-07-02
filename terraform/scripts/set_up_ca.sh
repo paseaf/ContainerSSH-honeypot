@@ -59,15 +59,3 @@ openssl x509 -req -days 365 -sha256 -in client.csr -CA ca.pem -CAkey ca-key.pem 
 rm -v client.csr server.csr extfile.cnf extfile-client.cnf
 chmod -v 0400 ca-key.pem key.pem server-key.pem
 chmod -v 0444 ca.pem server-cert.pem cert.pem
-
-
-# 6. Make docker daemon only accept connections with trusted certificate
-sudo systemctl stop docker.socket
-nohup sudo dockerd \
-   --tlsverify \
-   --tlscacert=ca.pem \
-   --tlscert=server-cert.pem \
-   --tlskey=server-key.pem \
-   -H=0.0.0.0:2376 \
-   &> dockerd.log &
-sleep 1
