@@ -27,9 +27,7 @@ Services:
 
 Utilities:
 
-- Cadvisor on Gateway-VM: `8088`
-- Cadvisor on Logger-VM: `8088`
-- Cadvisor on Sacrificial-VM: `8080`
+- cAdvisor: `8088`
 - Node exporter: `9100`
 
 ## Setting up the service on GCP

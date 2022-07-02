@@ -1,3 +1,4 @@
+# ContainerSSH guest image
 # modified from https://github.com/ContainerSSH/guest-image/blob/main/Dockerfile
 FROM containerssh/agent:latest AS agent
 

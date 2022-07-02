@@ -224,7 +224,7 @@ resource "google_compute_instance" "logger_vm" {
 
 # Note: provisioner in this block only runs after all previous provisioners are finished
 resource "null_resource" "set_up_docker_tls_and_containerssh" {
-  # 1. create CA and client keys
+  # 1. Create CA and client keys; Set up Docker TLS on Sacrificial VM
   provisioner "remote-exec" {
     connection {
       type        = "ssh"
@@ -236,6 +236,7 @@ resource "null_resource" "set_up_docker_tls_and_containerssh" {
     scripts = [
       "./scripts/set_up_ca.sh",
       "./scripts/start_docker_tls.sh",
+      "./scripts/run_cadvisor.sh"
     ]
   }
 
