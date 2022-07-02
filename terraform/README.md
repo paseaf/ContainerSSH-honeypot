@@ -76,8 +76,11 @@ You should be able to log in with any password.
 #### SSH to a GCP VM
 
 ```bash
-# ssh to a vm (e.g., gateway-vm, logger-vm, sacrificial-vm)
-gcp compute ssh <vm-name>
+# Gateway VM
+gcloud compute ssh gateway-vm --zone=europe-west3-c --ssh-flag="-p 2333"
+
+# Other VM
+gcp compute ssh <vm-name> --zone=europe-west3-c
 ```
 
 #### Managing MinIO with MinIO Client `mc`
