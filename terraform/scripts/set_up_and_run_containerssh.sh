@@ -9,14 +9,27 @@ sudo mkdir -p /srv/containerssh/config/
 sudo mkdir -p /srv/containerssh/audit/
 
 
+# source MINIO credentials
+source /home/deployer/.env
+# check if env vars sourced
+if [ -z ${MINIO_ROOT_USER+x} ]; then echo "MINIO_ROOT_USER is unset. Exiting..."; exit 1; fi
+if [ -z ${MINIO_ROOT_PASSWORD+x} ]; then echo "MINIO_ROOT_PASSWORD is unset. Exiting..."; exit 1; fi
+
 # insert keys into config file
 mkdir -p /tmp
-cp ~/config.yaml /tmp/config.yaml
-# indent keys
+
+# append MinIO credentials to config.yaml
+# write to tmp config
+sed "/ s3:/a\
+\ \ \  accessKey: $MINIO_ROOT_USER\n\
+\ \ \  secretKey: $MINIO_ROOT_PASSWORD" \
+~/config.yaml > /tmp/config.yaml
+
+# create tmp files for indented keys (yaml requires indentation)
 sed 's/^/      /' ~/.docker/cert.pem > /tmp/cert.pem
 sed 's/^/      /' ~/.docker/key.pem > /tmp/key.pem
 sed 's/^/      /' ~/.docker/ca.pem > /tmp/ca.pem
-# append indented keys
+# append indented keys to temp config file
 sed -i '/ cert: |/r /tmp/cert.pem' /tmp/config.yaml
 sed -i '/ key: |/r /tmp/key.pem' /tmp/config.yaml
 sed -i '/ cacert: |/r /tmp/ca.pem' /tmp/config.yaml

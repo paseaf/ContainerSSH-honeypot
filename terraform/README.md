@@ -71,19 +71,6 @@ You should be able to log in with any password.
 
 ## Misc.
 
-### Services
-
-#### Prometheus status page
-
-`http://<logger-vm>:9091/`:
-
-To get logger-vm IP address:
-
-```bash
-gcloud compute instances describe logger-vm \
-  --format='get(networkInterfaces[0].accessConfigs[0].natIP)'
-```
-
 ### Handy commands
 
 #### SSH to a GCP VM
@@ -94,6 +81,7 @@ gcp compute ssh <vm-name>
 ```
 
 #### Managing MinIO with MinIO Client `mc`
+
 `mc` allows you to manage a MinIO server.
 
 ```bash
@@ -103,7 +91,7 @@ chmod +x mc
 sudo mv mc /usr/local/bin/mc
 
 # configure local connection to a MinIO server
-mc alias set conn_name http://vm-host:9000 ROOTNAME CHANGEME123
+mc alias set conn_name http://vm-host:9000 <MINIO_ROOT_USER> <MINIO_ROOT_PASSWORD>
 # check connection status
 mc admin info conn_name
 # list buckets on a connection
@@ -116,7 +104,7 @@ mc cp local_file conn_name/bucket_name
 
 ## Troubleshooting
 
-Trouble:
+### Trouble:
 
 `terraform apply` failed with `Error creating Network: googleapi: Error 403: Required 'compute.networks.create' permission for '<project-id>', forbidden`
 
@@ -124,3 +112,25 @@ Possible solutions:
 
 1. `project-id` might be wrong. Check if `project` value is correct in installation section step 4.
 2. Did you grant the _Project Editor_ permission to the service account in installation section step 3?
+
+### Trouble: `terraform apply` failed after timout
+
+```bash
+google_compute_instance.gateway_vm: Still creating... [5m0s elapsed]
+google_compute_instance.logger_vm: Still creating... [5m10s elapsed]
+google_compute_instance.gateway_vm: Still creating... [5m10s elapsed]
+╷
+│ Error: file provisioner error
+│
+│   with google_compute_instance.gateway_vm,
+│   on main.tf line 132, in resource "google_compute_instance" "gateway_vm":
+│  132:   provisioner "file" {
+│
+│ timeout - last error: SSH authentication failed (deployer@34.141.101.194:22): ssh: handshake failed: ssh: unable to
+│ authenticate, attempted methods [none publickey], no supported methods remain
+╵
+```
+
+Possible solution:
+
+Remove `./deployer_key`, `./deployer_key.pub`, and regenerate them following this README.

@@ -68,8 +68,6 @@ audit:
   s3:
     # Local directory to store the audit log temporarily.
     local: /var/log/containerssh/audit/
-    accessKey: ROOTNAME
-    secretKey: CHANGEME123
     region: europe-west3
     bucket: honeypot
     # Optional: set your S3 endpoint

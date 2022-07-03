@@ -49,17 +49,11 @@ build {
       "./scripts/download_node_exporter.sh",
       "./scripts/create_node_exporter_service.sh",
       "./scripts/install_docker.sh",
-      "./scripts/build_containerssh_guest_image.sh"
+      "./scripts/build_containerssh_guest_image.sh",
+      "./scripts/download_docker_images.sh"
     ]
     expect_disconnect = true
   }
-
-  provisioner "shell" {
-    inline = [
-      "apt-get -y install cadvisor"
-    ]
-  }
-
 }
 
 build {
@@ -88,7 +82,8 @@ build {
     scripts = [
       "./scripts/download_node_exporter.sh",
       "./scripts/create_node_exporter_service.sh",
-      "./scripts/install_docker.sh"
+      "./scripts/install_docker.sh",
+      "./scripts/download_docker_images.sh"
     ]
     expect_disconnect = true
   }

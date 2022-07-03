@@ -50,5 +50,10 @@ Note: `-force` to overwrite previously built image.
 
 ### Troubleshooting
 
-1. Flaky `packer build -force`
+1. Flaky `packer build -force`\
    Solution: rerun the command. There are strange errors sometimes and we don't yet know how to solve it :P
+
+2. Red text in log\
+   ![image](https://user-images.githubusercontent.com/33207565/169320895-0fcc5d3d-67ac-48e7-87f4-54c49dc28707.png)
+   Answer: It's an expected behavior caused by `set -x` in our bash scripts!!\
+   See [here](https://github.com/hashicorp/packer/issues/7947#issuecomment-520566272)
