@@ -43,8 +43,8 @@ Utilities:
    ```bash
    ssh -oHostKeyAlgorithms=+ssh-rsa \
      $(gcloud compute instances describe gateway-vm \
-     --format='get(networkInterfaces[0].accessConfigs[0].natIP)') \
-     -p 2222
+     --format='get(networkInterfaces[0].accessConfigs[0].natIP)' \
+     --zone=europe-west3-c) -p 2222
    ```
    Your will be redirected to a newly created container in the sacrificial VM.
 
@@ -57,8 +57,9 @@ To access the log:
 
    - Get the logger VM IP via
      ```bash
-     gcloud compute instances describe logger-vm \
-     --format='get(networkInterfaces[0].accessConfigs[0].natIP)'
+     gcloud compute instances describe gateway-vm \
+       --format='get(networkInterfaces[0].accessConfigs[0].natIP)' \
+       --zone=europe-west3-c
      ```
 
 1. Log in with credentials generated at `./terraform/credentials.txt`
@@ -85,8 +86,9 @@ We use Grafana for visualizing the collected metrics.
 To get logger-vm IP address:
 
 ```bash
-gcloud compute instances describe logger-vm \
-  --format='get(networkInterfaces[0].accessConfigs[0].natIP)'
+gcloud compute instances describe gateway-vm \
+  --format='get(networkInterfaces[0].accessConfigs[0].natIP)' \
+  --zone=europe-west3-c
 ```
 
 ## Troubleshooting
