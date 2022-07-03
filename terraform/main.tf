@@ -23,8 +23,8 @@ resource "google_compute_subnetwork" "honeypot_subnet" {
   network       = google_compute_network.main.self_link
 }
 
-resource "google_compute_firewall" "containerssh-allow-all" {
-  name    = "containerssh-allow-all"
+resource "google_compute_firewall" "containerssh-allow-ssh" {
+  name    = "containerssh-allow-ssh"
   network = google_compute_network.main.self_link
 
   allow {
@@ -32,25 +32,20 @@ resource "google_compute_firewall" "containerssh-allow-all" {
   }
 
   allow {
-    protocol = "udp"
-    ports    = ["0-65535"]
-  }
-
-  allow {
     protocol = "tcp"
-    ports    = ["0-65535"]
+    ports    = ["22"]
   }
 
   source_ranges = ["0.0.0.0/0"]
 }
 
-# open port 9090 and 9091 on our logger-vm: to control metrics and minio
+# open port 3000 for Grafana, 9000 and 9090 for MinIO on our logger-vm
 resource "google_compute_firewall" "firewall_logger_view" {
   name    = "firewall-logger-view"
   network = google_compute_network.main.self_link
   allow {
     protocol = "tcp"
-    ports    = ["3000", "9090", "9091"]
+    ports    = ["3000", "9000", "9090"]
   }
   target_tags   = ["observer"]
   source_ranges = ["0.0.0.0/0"]
@@ -83,14 +78,14 @@ resource "google_compute_firewall" "firewall_sacrificial_exception" {
   }
 }
 
-# open sacrificial-port 9100 to our prometheus
+# open sacrificial-port 8088 for cadvisor and 9100 for node-exporter
 resource "google_compute_firewall" "firewall_sacrificial_nodeexport" {
   name    = "firewall-sacrificial-nodeexport"
   network = google_compute_network.main.self_link
 
   allow {
     protocol = "tcp"
-    ports    = ["8080", "9100"]
+    ports    = ["8088", "9100"]
   }
 
   target_tags = ["sacrificial"]

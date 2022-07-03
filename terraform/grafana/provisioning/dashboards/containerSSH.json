@@ -33,9 +33,11 @@
         "type": "prometheus",
         "uid": "PBFA97CFB590B2093"
       },
-      "description": "",
       "fieldConfig": {
         "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
@@ -45,8 +47,110 @@
                 "value": null
               },
               {
-                "color": "red",
-                "value": 80
+                "color": "dark-red",
+                "value": 0
+              },
+              {
+                "color": "dark-green",
+                "value": 1
+              }
+            ]
+          },
+          "unit": "bool_on_off"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 12,
+        "w": 3,
+        "x": 0,
+        "y": 0
+      },
+      "id": 30,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "value_and_name"
+      },
+      "pluginVersion": "9.0.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "editorMode": "code",
+          "expr": "up{instance=\"gateway-vm:9100\"}",
+          "legendFormat": "Gateway-VM",
+          "range": true,
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "editorMode": "code",
+          "expr": "up{instance=\"logger-vm:9100\"}",
+          "hide": false,
+          "legendFormat": "Logger-VM",
+          "range": true,
+          "refId": "B"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "editorMode": "code",
+          "expr": "up{instance=\"sacrificial-vm:9100\"}",
+          "hide": false,
+          "legendFormat": "Sacrificial-VM",
+          "range": true,
+          "refId": "C"
+        }
+      ],
+      "title": "VMs Status",
+      "transparent": true,
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "decimals": 2,
+          "mappings": [
+            {
+              "options": {
+                "match": "null",
+                "result": {
+                  "color": "dark-red",
+                  "index": 0,
+                  "text": "Server Down"
+                }
+              },
+              "type": "special"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
               }
             ]
           },
@@ -57,7 +161,7 @@
       "gridPos": {
         "h": 4,
         "w": 3,
-        "x": 0,
+        "x": 3,
         "y": 0
       },
       "id": 13,
@@ -116,17 +220,25 @@
             "fixedColor": "dark-green",
             "mode": "fixed"
           },
-          "mappings": [],
+          "mappings": [
+            {
+              "options": {
+                "match": "null",
+                "result": {
+                  "color": "dark-red",
+                  "index": 0,
+                  "text": "Server Down"
+                }
+              },
+              "type": "special"
+            }
+          ],
           "thresholds": {
             "mode": "absolute",
             "steps": [
               {
                 "color": "green",
                 "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
               }
             ]
           }
@@ -135,8 +247,8 @@
       },
       "gridPos": {
         "h": 4,
-        "w": 3,
-        "x": 3,
+        "w": 4,
+        "x": 6,
         "y": 0
       },
       "id": 22,
@@ -186,73 +298,145 @@
       "fieldConfig": {
         "defaults": {
           "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": -1,
-            "drawStyle": "line",
-            "fillOpacity": 37,
-            "gradientMode": "hue",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "lineInterpolation": "stepBefore",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
+            "fixedColor": "green",
+            "mode": "thresholds"
           },
           "mappings": [],
+          "max": 100,
+          "min": 0,
           "thresholds": {
-            "mode": "absolute",
+            "mode": "percentage",
             "steps": [
               {
                 "color": "green",
                 "value": null
               },
               {
-                "color": "red",
+                "color": "orange",
                 "value": 80
+              },
+              {
+                "color": "red",
+                "value": 90
               }
             ]
           },
-          "unit": "decbytes"
+          "unit": "percent"
         },
         "overrides": []
       },
       "gridPos": {
         "h": 12,
-        "w": 6,
-        "x": 6,
+        "w": 4,
+        "x": 10,
+        "y": 0
+      },
+      "id": 26,
+      "options": {
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true
+      },
+      "pluginVersion": "9.0.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "editorMode": "code",
+          "expr": "((node_filesystem_size_bytes{fstype=\"ext4\", instance=\"gateway-vm:9100\"}-node_filesystem_avail_bytes{fstype=\"ext4\", instance=\"gateway-vm:9100\"}) / node_filesystem_size_bytes{fstype=\"ext4\", instance=\"gateway-vm:9100\"}) * 100",
+          "legendFormat": "Gateway-VM",
+          "range": true,
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "editorMode": "code",
+          "expr": "((node_filesystem_size_bytes{fstype=\"ext4\", instance=\"logger-vm:9100\"}-node_filesystem_avail_bytes{fstype=\"ext4\", instance=\"logger-vm:9100\"}) / node_filesystem_size_bytes{fstype=\"ext4\", instance=\"logger-vm:9100\"}) * 100",
+          "hide": false,
+          "legendFormat": "Logger-VM",
+          "range": true,
+          "refId": "B"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "editorMode": "code",
+          "expr": "((node_filesystem_size_bytes{fstype=\"ext4\", instance=\"sacrificial-vm:9100\"}-node_filesystem_avail_bytes{fstype=\"ext4\", instance=\"sacrificial-vm:9100\"}) / node_filesystem_size_bytes{fstype=\"ext4\", instance=\"sacrificial-vm:9100\"}) * 100",
+          "hide": false,
+          "legendFormat": "Sacrificial-VM",
+          "range": true,
+          "refId": "C"
+        }
+      ],
+      "title": "VM Disk Usage Percentage",
+      "transparent": true,
+      "type": "gauge"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "mappings": [],
+          "max": 100,
+          "min": 0,
+          "thresholds": {
+            "mode": "percentage",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "orange",
+                "value": 80
+              },
+              {
+                "color": "red",
+                "value": 90
+              }
+            ]
+          },
+          "unit": "percent"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 12,
+        "w": 4,
+        "x": 14,
         "y": 0
       },
       "id": 16,
       "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom"
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
         },
-        "tooltip": {
-          "mode": "single",
-          "sort": "none"
-        }
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true
       },
-      "pluginVersion": "9.0.1",
+      "pluginVersion": "9.0.2",
       "targets": [
         {
           "datasource": {
@@ -261,7 +445,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "node_memory_MemTotal_bytes{instance=\"gateway-vm:9100\"} - (node_memory_MemFree_bytes{instance=\"gateway-vm:9100\"} + node_memory_Cached_bytes{instance=\"gateway-vm:9100\"} + node_memory_Buffers_bytes{instance=\"gateway-vm:9100\"})",
+          "expr": "(node_memory_MemTotal_bytes{instance=\"gateway-vm:9100\"} - (node_memory_MemFree_bytes{instance=\"gateway-vm:9100\"} + node_memory_Cached_bytes{instance=\"gateway-vm:9100\"} + node_memory_Buffers_bytes{instance=\"gateway-vm:9100\"})) / node_memory_MemTotal_bytes{instance=\"gateway-vm:9100\"} * 100",
           "instant": false,
           "legendFormat": "Gateway-VM",
           "range": true,
@@ -273,9 +457,9 @@
             "uid": "PBFA97CFB590B2093"
           },
           "editorMode": "code",
-          "expr": "node_memory_MemTotal_bytes{instance=\"sacrificial-vm:9100\"} - (node_memory_MemFree_bytes{instance=\"sacrificial-vm:9100\"} + node_memory_Cached_bytes{instance=\"sacrificial-vm:9100\"} + node_memory_Buffers_bytes{instance=\"sacrificial-vm:9100\"})",
+          "expr": "(node_memory_MemTotal_bytes{instance=\"logger-vm:9100\"} - (node_memory_MemFree_bytes{instance=\"logger-vm:9100\"} + node_memory_Cached_bytes{instance=\"logger-vm:9100\"} + node_memory_Buffers_bytes{instance=\"logger-vm:9100\"})) / node_memory_MemTotal_bytes{instance=\"logger-vm:9100\"} * 100",
           "hide": false,
-          "legendFormat": "Sacrificial-VM",
+          "legendFormat": "Logger-VM",
           "range": true,
           "refId": "B"
         },
@@ -285,16 +469,16 @@
             "uid": "PBFA97CFB590B2093"
           },
           "editorMode": "code",
-          "expr": "node_memory_MemTotal_bytes{instance=\"logger-vm:9100\"} - (node_memory_MemFree_bytes{instance=\"logger-vm:9100\"} + node_memory_Cached_bytes{instance=\"logger-vm:9100\"} + node_memory_Buffers_bytes{instance=\"logger-vm:9100\"})",
+          "expr": "(node_memory_MemTotal_bytes{instance=\"sacrificial-vm:9100\"} - (node_memory_MemFree_bytes{instance=\"sacrificial-vm:9100\"} + node_memory_Cached_bytes{instance=\"sacrificial-vm:9100\"} + node_memory_Buffers_bytes{instance=\"sacrificial-vm:9100\"})) / node_memory_MemTotal_bytes{instance=\"sacrificial-vm:9100\"} * 100",
           "hide": false,
-          "legendFormat": "Logger-VM",
+          "legendFormat": "Sacrificial-VM",
           "range": true,
           "refId": "C"
         }
       ],
-      "title": "VMs Disk Usage",
+      "title": "VM Memory Usage  Percentage",
       "transparent": true,
-      "type": "timeseries"
+      "type": "gauge"
     },
     {
       "datasource": {
@@ -354,8 +538,8 @@
       },
       "gridPos": {
         "h": 6,
-        "w": 12,
-        "x": 12,
+        "w": 6,
+        "x": 18,
         "y": 0
       },
       "id": 18,
@@ -399,17 +583,26 @@
           "color": {
             "mode": "continuous-YlBl"
           },
-          "mappings": [],
+          "decimals": 2,
+          "mappings": [
+            {
+              "options": {
+                "match": "null",
+                "result": {
+                  "color": "dark-red",
+                  "index": 0,
+                  "text": "Server Down"
+                }
+              },
+              "type": "special"
+            }
+          ],
           "thresholds": {
             "mode": "absolute",
             "steps": [
               {
                 "color": "green",
                 "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
               }
             ]
           },
@@ -420,7 +613,7 @@
       "gridPos": {
         "h": 4,
         "w": 3,
-        "x": 0,
+        "x": 3,
         "y": 4
       },
       "id": 14,
@@ -479,17 +672,25 @@
             "fixedColor": "semi-dark-blue",
             "mode": "fixed"
           },
-          "mappings": [],
+          "mappings": [
+            {
+              "options": {
+                "match": "null",
+                "result": {
+                  "color": "dark-red",
+                  "index": 0,
+                  "text": "Server Down"
+                }
+              },
+              "type": "special"
+            }
+          ],
           "thresholds": {
             "mode": "absolute",
             "steps": [
               {
                 "color": "green",
                 "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
               }
             ]
           }
@@ -498,8 +699,8 @@
       },
       "gridPos": {
         "h": 4,
-        "w": 3,
-        "x": 3,
+        "w": 4,
+        "x": 6,
         "y": 4
       },
       "id": 4,
@@ -599,8 +800,8 @@
       },
       "gridPos": {
         "h": 6,
-        "w": 12,
-        "x": 12,
+        "w": 6,
+        "x": 18,
         "y": 6
       },
       "id": 19,
@@ -644,17 +845,26 @@
           "color": {
             "mode": "continuous-BlPu"
           },
-          "mappings": [],
+          "decimals": 2,
+          "mappings": [
+            {
+              "options": {
+                "match": "null",
+                "result": {
+                  "color": "dark-red",
+                  "index": 0,
+                  "text": "Server Down"
+                }
+              },
+              "type": "special"
+            }
+          ],
           "thresholds": {
             "mode": "absolute",
             "steps": [
               {
                 "color": "green",
                 "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
               }
             ]
           },
@@ -665,7 +875,7 @@
       "gridPos": {
         "h": 4,
         "w": 3,
-        "x": 0,
+        "x": 3,
         "y": 8
       },
       "id": 12,
@@ -724,17 +934,25 @@
             "fixedColor": "purple",
             "mode": "fixed"
           },
-          "mappings": [],
+          "mappings": [
+            {
+              "options": {
+                "match": "null",
+                "result": {
+                  "color": "dark-red",
+                  "index": 0,
+                  "text": "Server Down"
+                }
+              },
+              "type": "special"
+            }
+          ],
           "thresholds": {
             "mode": "absolute",
             "steps": [
               {
                 "color": "green",
                 "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
               }
             ]
           }
@@ -743,8 +961,8 @@
       },
       "gridPos": {
         "h": 4,
-        "w": 3,
-        "x": 3,
+        "w": 4,
+        "x": 6,
         "y": 8
       },
       "id": 2,
@@ -772,13 +990,13 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "count(container_last_seen{name=~\".+\"})",
+          "expr": "count(container_last_seen{name=~\".+\", instance=\"sacrificial-vm:8088\"})",
           "legendFormat": "",
           "range": true,
           "refId": "A"
         }
       ],
-      "title": "Running Containers",
+      "title": "Containers on Sacrificial",
       "transparent": true,
       "type": "stat"
     },
@@ -817,10 +1035,12 @@
               "mode": "none"
             },
             "thresholdsStyle": {
-              "mode": "off"
+              "mode": "area"
             }
           },
           "mappings": [],
+          "max": 21200000000,
+          "min": 0,
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -829,8 +1049,12 @@
                 "value": null
               },
               {
+                "color": "orange",
+                "value": 19000000000
+              },
+              {
                 "color": "red",
-                "value": 80
+                "value": 20000000000
               }
             ]
           },
@@ -839,12 +1063,12 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 8,
-        "w": 12,
+        "h": 12,
+        "w": 7,
         "x": 0,
         "y": 12
       },
-      "id": 24,
+      "id": 27,
       "options": {
         "legend": {
           "calcs": [],
@@ -856,6 +1080,7 @@
           "sort": "none"
         }
       },
+      "pluginVersion": "9.0.2",
       "targets": [
         {
           "datasource": {
@@ -863,13 +1088,162 @@
             "uid": "PBFA97CFB590B2093"
           },
           "editorMode": "code",
-          "expr": "node_memory_Active_bytes",
-          "legendFormat": "{{instance}}",
+          "expr": "node_filesystem_size_bytes{fstype=\"ext4\", instance=\"gateway-vm:9100\"}-node_filesystem_avail_bytes{fstype=\"ext4\", instance=\"gateway-vm:9100\"}",
+          "legendFormat": "Gateway-VM",
           "range": true,
           "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "editorMode": "code",
+          "expr": "node_filesystem_size_bytes{fstype=\"ext4\", instance=\"logger-vm:9100\"}-node_filesystem_avail_bytes{fstype=\"ext4\", instance=\"logger-vm:9100\"}",
+          "hide": false,
+          "legendFormat": "Logger-VM",
+          "range": true,
+          "refId": "B"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "editorMode": "code",
+          "expr": "node_filesystem_size_bytes{fstype=\"ext4\", instance=\"sacrificial-vm:9100\"}-node_filesystem_avail_bytes{fstype=\"ext4\", instance=\"sacrificial-vm:9100\"}",
+          "hide": false,
+          "legendFormat": "Sacrificial-VM",
+          "range": true,
+          "refId": "C"
         }
       ],
-      "title": "VMs RAM Usage",
+      "title": "VM Disk Usage",
+      "transparent": true,
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "smooth",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "area"
+            }
+          },
+          "mappings": [],
+          "max": 2000000000,
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "orange",
+                "value": 1750000010
+              },
+              {
+                "color": "red",
+                "value": 1900000000
+              }
+            ]
+          },
+          "unit": "decbytes"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 12,
+        "w": 8,
+        "x": 7,
+        "y": 12
+      },
+      "id": 28,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "9.0.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "node_memory_MemTotal_bytes{instance=\"gateway-vm:9100\"} - (node_memory_MemFree_bytes{instance=\"gateway-vm:9100\"} + node_memory_Cached_bytes{instance=\"gateway-vm:9100\"} + node_memory_Buffers_bytes{instance=\"gateway-vm:9100\"})",
+          "instant": false,
+          "legendFormat": "Gateway-VM",
+          "range": true,
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "editorMode": "code",
+          "expr": "node_memory_MemTotal_bytes{instance=\"logger-vm:9100\"} - (node_memory_MemFree_bytes{instance=\"logger-vm:9100\"} + node_memory_Cached_bytes{instance=\"logger-vm:9100\"} + node_memory_Buffers_bytes{instance=\"logger-vm:9100\"})",
+          "hide": false,
+          "legendFormat": "Logger-VM",
+          "range": true,
+          "refId": "B"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "editorMode": "code",
+          "expr": "node_memory_MemTotal_bytes{instance=\"sacrificial-vm:9100\"} - (node_memory_MemFree_bytes{instance=\"sacrificial-vm:9100\"} + node_memory_Cached_bytes{instance=\"sacrificial-vm:9100\"} + node_memory_Buffers_bytes{instance=\"sacrificial-vm:9100\"})",
+          "hide": false,
+          "legendFormat": "Sacrificial-VM",
+          "range": true,
+          "refId": "C"
+        }
+      ],
+      "title": "VM Memory Usage",
+      "transparent": true,
       "type": "timeseries"
     },
     {
@@ -932,9 +1306,9 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 12,
+        "h": 11,
+        "w": 9,
+        "x": 15,
         "y": 12
       },
       "id": 21,
@@ -968,7 +1342,7 @@
           "refId": "A"
         }
       ],
-      "title": "Container's Disk Usage",
+      "title": "Container's Memory Usage",
       "transparent": true,
       "type": "timeseries"
     }
@@ -988,6 +1362,6 @@
   "timezone": "browser",
   "title": "containerSSH-Monitoring",
   "uid": "4J6_na37z",
-  "version": 3,
+  "version": 6,
   "weekStart": ""
 }
