@@ -17,7 +17,7 @@ fi
 
 # exit if file already exists
 if [[ -f "$TARGET_FILE" && $force_write -eq 0 ]]; then
-   echo "Skipped!. File '$TARGET_FILE' already exists."
+   echo "Skipped! File '$TARGET_FILE' already exists."
    echo "To overwrite the file, use '--force' or '-f'."
    exit 0
 fi
