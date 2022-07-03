@@ -23,7 +23,7 @@ resource "google_compute_subnetwork" "honeypot_subnet" {
   network       = google_compute_network.main.self_link
 }
 
-resource "google_compute_firewall" "containerssh-allow-ssh" {
+resource "google_compute_firewall" "containerssh_allow_ssh" {
   name    = "containerssh-allow-ssh"
   network = google_compute_network.main.self_link
 
