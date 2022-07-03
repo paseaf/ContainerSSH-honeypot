@@ -22,14 +22,20 @@ if [[ -f "$TARGET_FILE" && $force_write -eq 0 ]]; then
    exit 0
 fi
 
-# set and generate credentials
+# set and generate credentials for MinIO
 MINIO_ROOT_USER="ROOTNAME"
 MINIO_ROOT_PASSWORD=$(openssl rand -base64 32)
+
+# set and generate credentials for Grafana
+GRAFANA_ADMIN_USER="GRAFANAADMIN"
+GRAFANA_ADMIN_PASSWORD=$(openssl rand -base64 32)
 
 # write credentials to a file
 cat <<EOF > "$TARGET_FILE"
 MINIO_ROOT_USER="$MINIO_ROOT_USER"
 MINIO_ROOT_PASSWORD="$MINIO_ROOT_PASSWORD"
+GRAFANA_ADMIN_USER="$GRAFANA_ADMIN_USER"
+GRAFANA_ADMIN_PASSWORD="$GRAFANA_ADMIN_PASSWORD"
 EOF
 
 echo "SUCCESS!"

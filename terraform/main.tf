@@ -246,7 +246,7 @@ resource "null_resource" "set_up_docker_tls_and_containerssh" {
     interpreter = ["/bin/bash"]
   }
 
-  # 3. move MinIO credentials to Gateway VM
+  # 3. move MinIO and Grafana credentials to Gateway VM
   provisioner "file" {
     connection {
       type        = "ssh"
