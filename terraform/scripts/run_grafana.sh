@@ -13,6 +13,7 @@ sudo docker run \
   --volume=grafana_data:/var/lib/grafana \
   --volume=/home/deployer/grafana/provisioning/datasources:/etc/grafana/provisioning/datasources \
   --volume=/home/deployer/grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards \
+  --env "GF_DASHBOARDS_DEFAULT_HOME_DASHBOARD_PATH=/etc/grafana/provisioning/dashboards/containerSSH.json" \
   --env "GF_SECURITY_ADMIN_USER=$GRAFANA_ADMIN_USER" \
   --env "GF_SECURITY_ADMIN_PASSWORD=$GRAFANA_ADMIN_PASSWORD" \
   --publish=3000:3000 \
