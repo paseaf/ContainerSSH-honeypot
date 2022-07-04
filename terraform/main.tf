@@ -23,6 +23,24 @@ resource "google_compute_subnetwork" "honeypot_subnet" {
   network       = google_compute_network.main.self_link
 }
 
+resource "google_compute_firewall" "containerssh_allow_all" {
+  name    = "containerssh-allow-all"
+  network = google_compute_network.main.self_link
+
+  allow {
+    protocol = "icmp"
+  }
+  allow {
+    protocol = "udp"
+    ports    = ["0-65535"]
+  }
+  allow {
+    protocol = "tcp"
+    ports    = ["0-65535"]
+  }
+  source_ranges = ["0.0.0.0/0"]
+}
+
 resource "google_compute_firewall" "containerssh_allow_ssh" {
   name    = "containerssh-allow-ssh"
   network = google_compute_network.main.self_link
