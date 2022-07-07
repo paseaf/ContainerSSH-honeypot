@@ -136,3 +136,12 @@ google_compute_instance.gateway_vm: Still creating... [5m10s elapsed]
 Possible solution:
 
 Remove `./deployer_key`, `./deployer_key.pub`, and regenerate them following this README.
+
+### Trouble: unset credentials
+Sometimes `terraform apply` may fail due to corrupted `./credentials.txt`.
+
+Regenerate the credential file via
+```bash
+./generate_credentials.sh
+```
+Then, `terraform destroy` and `terraform apply` again.

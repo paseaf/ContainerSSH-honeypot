@@ -227,8 +227,8 @@ resource "google_compute_instance" "logger_vm" {
   }
 
   provisioner "file" {
-    source      = "./grafana" # relative to terraform work_dir
-    destination = "./"        # relative to remote $HOME
+    source      = "./files/grafana" # relative to terraform work_dir
+    destination = "./"              # relative to remote $HOME
   }
 
   provisioner "remote-exec" {
