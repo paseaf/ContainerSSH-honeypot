@@ -1,9 +1,9 @@
 provider "google" {
-  project = var.project
+  project = var.project_id
   region  = "europe-west3"
   zone    = "europe-west3-c"
 
-  credentials = file(var.credentials)
+  credentials = file(var.gcp_key_file)
 }
 
 resource "google_compute_network" "main" {

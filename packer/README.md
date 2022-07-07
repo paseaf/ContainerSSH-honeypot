@@ -28,13 +28,11 @@ What you need:
 
 2. Move the downloaded service account key file to `./gcp.key.json`
 
-   > Note: if you want to use a different file name or location, change `account_file` in [`./main.pkr.hcl`](./main.pkr.hcl) accordingly
-
 3. Create a `variables.auto.pkrvars.hcl` file:
 
-```bash
-project = "<your_GCP_project_ID>"
-```
+   ```bash
+   project_id      = "<your_GCP_project_ID>"
+   ```
 
 ### Build the image
 
