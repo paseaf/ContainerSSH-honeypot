@@ -1039,22 +1039,12 @@
             }
           },
           "mappings": [],
-          "max": 21200000000,
-          "min": 0,
           "thresholds": {
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
+                "color": "transparent",
                 "value": null
-              },
-              {
-                "color": "orange",
-                "value": 19000000000
-              },
-              {
-                "color": "red",
-                "value": 20000000000
               }
             ]
           },
@@ -1161,22 +1151,20 @@
             }
           },
           "mappings": [],
-          "max": 2000000000,
-          "min": 0,
           "thresholds": {
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
+                "color": "transparent",
                 "value": null
               },
               {
                 "color": "orange",
-                "value": 1750000010
+                "value": 3500000000
               },
               {
                 "color": "red",
-                "value": 1900000000
+                "value": 3800000000
               }
             ]
           },
@@ -1292,12 +1280,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
+                "color": "transparent",
                 "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
               }
             ]
           },
