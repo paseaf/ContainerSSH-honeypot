@@ -187,6 +187,7 @@ resource "google_compute_instance" "logger_vm" {
   boot_disk {
     initialize_params {
       image = "ubuntu-with-docker-image"
+      size  = 200
     }
   }
 
