@@ -1,28 +1,57 @@
-resource "google_compute_firewall" "containerssh_allow_all" {
-  name    = "containerssh-allow-all"
-  network = google_compute_network.main.self_link
+# GCP has implied rules: allow all egress; deny all ingress
+# https://cloud.google.com/vpc/docs/firewalls#default_firewall_rules
+locals {
+  internal_ip_ranges = ["10.128.0.0/9"]
+  ports = {
+    cadvisor      = "8088"
+    node_exporter = "9100"
+    prometheus    = "9091"
+    minio_server  = "9000"
+    minio_console = "9090"
+    grafana       = "3000"
+  }
+}
 
+## Network-wide rules
+resource "google_compute_firewall" "allow_icmp" {
+  name    = "allow-icmp"
+  network = google_compute_network.main.self_link
   allow {
     protocol = "icmp"
-  }
-  allow {
-    protocol = "udp"
-    ports    = ["0-65535"]
-  }
-  allow {
-    protocol = "tcp"
-    ports    = ["0-65535"]
   }
   source_ranges = ["0.0.0.0/0"]
 }
 
-resource "google_compute_firewall" "containerssh_allow_ssh" {
-  name    = "containerssh-allow-ssh"
+resource "google_compute_firewall" "internal_allow_metrics" {
+  name    = "internal-allow-metrics"
+  network = google_compute_network.main.self_link
+  allow {
+    protocol = "tcp"
+    ports    = [local.ports.cadvisor, local.ports.node_exporter]
+  }
+  source_tags = ["logger"]
+}
+
+resource "google_compute_firewall" "internal_allow_node_exporter" {
+  name    = "allow-internal-cadvisor"
+  network = google_compute_network.main.self_link
+  allow {
+    protocol = "tcp"
+    ports    = ["8088"]
+  }
+  source_ranges = local.internal_ip_ranges
+}
+
+resource "google_compute_firewall" "internal_allow_ssh" {
+  name    = "internal-allow-ssh"
   network = google_compute_network.main.self_link
 
   allow {
-    protocol = "icmp"
+    protocol = "tcp"
+    ports    = ["22"]
   }
+  source_ranges = local.internal_ip_ranges
+}
 
   allow {
     protocol = "tcp"
