@@ -1,5 +1,6 @@
-# GCP has implied rules: allow all egress; deny all ingress
-# https://cloud.google.com/vpc/docs/firewalls#default_firewall_rules
+# Firewall rules naming convention:
+# "action_source_to_destination_service/port"
+
 locals {
   ports = {
     cadvisor      = "8088"
