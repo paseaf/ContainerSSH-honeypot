@@ -76,10 +76,13 @@ You should be able to log in with any password.
 
 ```bash
 # Gateway VM
-gcloud compute ssh gateway-vm --zone=europe-west3-c --ssh-flag="-p 2333"
+gcloud compute ssh root@gateway-vm --zone=europe-west3-c --ssh-flag="-p 2333"
 
-# Other VM
-gcp compute ssh <vm-name> --zone=europe-west3-c
+# Logger VM
+gcloud compute ssh root@logger-vm --zone=europe-west3-c
+
+# Sacrificial VM
+gcloud compute ssh root@sacrificial-vm --zone=europe-west3-c
 ```
 
 #### Managing MinIO with MinIO Client `mc`
