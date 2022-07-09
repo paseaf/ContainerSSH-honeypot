@@ -6,6 +6,7 @@ locals {
     cadvisor             = "8088"
     node_exporter        = "9100"
     prometheus           = "9091"
+    prometheus_auth      = "19091"
     minio_server         = "9000"
     minio_console        = "9090"
     grafana              = "3000"
@@ -75,13 +76,13 @@ resource "google_compute_firewall" "allow_all_to_logger_vm_minio" {
   target_tags   = [local.tags.logger_vm]
 }
 
-resource "google_compute_firewall" "allow_all_to_logger_vm_prometheus" {
-  name    = "allow-all-to-logger-vm-prometheus"
+resource "google_compute_firewall" "allow_all_to_logger_vm_prometheus_auth" {
+  name    = "allow-all-to-logger-vm-prometheus-auth"
   network = google_compute_network.main.self_link
   allow {
     protocol = "tcp"
     ports = [
-      local.ports.prometheus
+      local.ports.prometheus_auth
     ]
   }
   source_ranges = ["0.0.0.0/0"]
