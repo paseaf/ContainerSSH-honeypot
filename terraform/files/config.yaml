@@ -56,6 +56,10 @@ docker:
         /tmp: rw,noexec,nosuid,size=65536k,uid=1000,gid=1000
         /run: rw,noexec,nosuid,size=65536k,uid=1000,gid=1000
         /home/ubuntu: rw,noexec,nosuid,size=65536k,uid=1000,gid=1000
+metrics:
+  enable: true
+  listen: "0.0.0.0:9101"
+  path: "/metrics"
 audit:
   enable: true
   format: binary
