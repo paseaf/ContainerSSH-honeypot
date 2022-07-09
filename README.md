@@ -11,6 +11,7 @@ Sacrificial VM provides infrastructure for containers.
 ### Ports
 
 Gateway VM:
+
 - Honeypot gateway: `22`, `2222` (`2222` is redirected to `22`)
 - SSH: `2333`
 - cAdvisor: `8088`
@@ -19,15 +20,17 @@ Gateway VM:
 - ContainerSSH metrics server(TBD): `9101`
 
 Logger VM:
+
 - SSH: `22`
 - cAdvisor: `8088`
 - Node Exporter: `9100`
 - MinIO server: `9000`
 - MinIO Console: `9090`
 - Grafana: `3000`
-- Prometheus: `9091`
+- Prometheus with auth proxy: `19091`->`9091`
 
 Sacrificial VM:
+
 - SSH: `22`
 - cAdvisor: `8088`
 - Node Exporter: `9100`
@@ -40,63 +43,50 @@ Sacrificial VM:
 
 ## Trying out the honeypot
 
-### SSH into the honeypot and download your audit log
+To SSH into the honeypot:
 
-1. SSH to the gateway VM from your local computer
-   ```bash
-   ssh -oHostKeyAlgorithms=+ssh-rsa \
-     $(gcloud compute instances describe gateway-vm \
-     --format='get(networkInterfaces[0].accessConfigs[0].natIP)' \
-     --zone=europe-west3-c)
-   ```
-   Your will be redirected to a newly created container in the sacrificial VM.
+```bash
+ssh -oHostKeyAlgorithms=+ssh-rsa \
+ $(gcloud compute instances describe gateway-vm \
+ --format='get(networkInterfaces[0].accessConfigs[0].natIP)' \
+ --zone=europe-west3-c)
+```
 
-### Download audit log from MinIO Console
+Your will be redirected to a newly created container in the sacrificial VM.
 
-All SSH interactions with the honeypot are audited and logged.\
-To access the log:
+All SSH interactions with the honeypot are audited and logged into MinIO.
 
-1. In your browser, open MinIO Console at `http://{logger vm IP}:9090`.
+## Accessing audit logs and metrics
 
-   - Get the logger VM IP via
-     ```bash
-     gcloud compute instances describe logger-vm \
-       --format='get(networkInterfaces[0].accessConfigs[0].natIP)' \
-       --zone=europe-west3-c
-     ```
+After you deployed the honeypot, following monitoring tools should be available:
 
+- Prometheus: for raw hardware and OS metrics.
+- Grafana: for visualized hardware and OS metrics.
+- MinIO Console: for audit logs (what attackers did via SSH).
+
+To get their URLs:
+
+```bash
+cd terraform
+terraform output
+```
+
+You should see something like
+
+```
+grafana = "http://34.89.246.67:3000/"
+minio_console = "http://34.89.246.67:9090/"
+prometheus = "http://34.89.246.67:19091/"
+```
+
+Log in with credentials generated at `./terraform/credentials.txt`.
+
+### Download and decode audit logs
+
+1. Open MinIO Console URL in browser.
 1. Log in with credentials generated at `./terraform/credentials.txt`
-
-   ```
-   MINIO_ROOT_USER="your_user_name"
-   MINIO_ROOT_PASSWORD="your_password"
-   ```
-
-1. You should see records in the `containerssh` bucket. Download a record you want to analyze.
-1. Decode the record with `containerssh-auditlog-decoder` from https://github.com/ContainerSSH/ContainerSSH/releases/tag/v0.4.1, or implement your own decoder.\
+1. You should see records in the `containerssh` bucket. Download records you want to analyze.
+1. Decode the records with `containerssh-auditlog-decoder` from https://github.com/ContainerSSH/ContainerSSH/releases/tag/v0.4.1, or implement your own decoder.\
    Read more about the record format [here](https://containerssh.io/reference/audit/#the-binary-format-recommended).
 
 Note: [this SSH guide](https://containerssh.io/development/containerssh/ssh/) may help you understand the audit log.
-
-### Monitor system status
-
-We use Prometheus to collect hardware and OS metrics.
-We use Grafana for visualizing the collected metrics.
-
-- Grafana: `http://<logger vm IP>:3000`
-- Prometheus: `http://<logger vm IP>:9091`
-
-To get logger-vm IP address:
-
-```bash
-gcloud compute instances describe logger-vm \
-  --format='get(networkInterfaces[0].accessConfigs[0].natIP)' \
-  --zone=europe-west3-c
-```
-
-## Troubleshooting
-
-GCloud notes
-
-- If `gcloud` failed when installing components:\
-  Install `gcloud` with [interactive](https://cloud.google.com/sdk/docs/downloads-interactive#linux-mac). (worked for Fedora)
