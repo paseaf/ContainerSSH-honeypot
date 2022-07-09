@@ -1,9 +1,7 @@
-# [WIP] containerSSH-honeypot
+# ContainerSSH-honeypot
+An SSH honeypot built with [ContainerSSH](https://containerssh.io/) on GCP.
 
-:construction::construction::construction:\
-This project is still work in progress\
-:construction::construction::construction:
-
+## Infrastructure
 ![infra diagram](./diagrams/infra.drawio.svg)
 
 Sacrificial VM provides infrastructure for containers.
@@ -36,10 +34,10 @@ Sacrificial VM:
 - Node Exporter: `9100`
 - Dockerd over TLS: `2376`
 
-## Setting up the service on GCP
+## Deploying the honeypot to GCP
 
 1. Build VM images following [`/packer/README.md`](/packer/README.md)
-2. Provision infrastructure and spin up services following [`/terraform/README.md`](/terraform/README.md)
+2. Provision infrastructure and deploy services following [`/terraform/README.md`](/terraform/README.md)
 
 ## Trying out the honeypot
 
@@ -60,9 +58,9 @@ All SSH interactions with the honeypot are audited and logged into MinIO.
 
 After you deployed the honeypot, following monitoring tools should be available:
 
-- Prometheus: for raw hardware and OS metrics.
-- Grafana: for visualized hardware and OS metrics.
-- MinIO Console: for audit logs (what attackers did via SSH).
+- **Prometheus**: for raw hardware and OS metrics.
+- **Grafana**: for visualized hardware and OS metrics.
+- **MinIO Console**: for audit logs (what attackers did via SSH).
 
 To get their URLs:
 
