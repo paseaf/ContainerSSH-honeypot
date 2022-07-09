@@ -28,6 +28,10 @@ scrape_configs:
     static_configs:
       - targets: ["localhost:9090"]
 
+  - job_name: "containerssh-metrics"
+    static_configs:
+      - targets: ["gateway-vm:9101"]
+
   # expose node exporter metrics
   - job_name: "nodeexporter-gateway-vm"
     static_configs:

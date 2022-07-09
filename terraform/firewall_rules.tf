@@ -107,7 +107,20 @@ resource "google_compute_firewall" "allow_logger_vm_to_network_node_exporter" {
     ports    = [local.ports.node_exporter]
   }
 
-  source_tags = ["logger"]
+  source_tags = [local.tags.logger_vm]
+}
+
+resource "google_compute_firewall" "allow_logger_vm_to_gateway_vm_containerssh_metrics" {
+  name    = "allow-logger-vm-to-gateway-vm-containerssh-metrics"
+  network = google_compute_network.main.self_link
+
+  allow {
+    protocol = "tcp"
+    ports    = [local.ports.containerssh_metrics]
+  }
+
+  source_tags = [local.tags.logger_vm]
+  target_tags = [local.tags.gateway_vm]
 }
 
 resource "google_compute_firewall" "deny_sacrificial_vm_to_all" {
