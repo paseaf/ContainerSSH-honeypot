@@ -130,6 +130,8 @@ resource "google_compute_instance" "gateway_vm" {
   boot_disk {
     initialize_params {
       image = "ubuntu-with-docker-image"
+      size  = 20
+      type  = "pd-balanced"
     }
   }
 
@@ -167,6 +169,8 @@ resource "google_compute_instance" "sacrificial_vm" {
   boot_disk {
     initialize_params {
       image = "sacrificial-vm-image"
+      size  = 20
+      type  = "pd-balanced"
     }
   }
 
@@ -187,6 +191,8 @@ resource "google_compute_instance" "logger_vm" {
   boot_disk {
     initialize_params {
       image = "ubuntu-with-docker-image"
+      size  = 200
+      type  = "pd-balanced"
     }
   }
 
