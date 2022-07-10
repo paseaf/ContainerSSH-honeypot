@@ -3,13 +3,19 @@
 
 locals {
   ports = {
-    cadvisor      = "8088"
-    node_exporter = "9100"
-    prometheus    = "9091"
-    minio_server  = "9000"
-    minio_console = "9090"
-    grafana       = "3000"
-    docker_tls    = "2376"
+    cadvisor             = "8088"
+    node_exporter        = "9100"
+    prometheus           = "9091"
+    minio_server         = "9000"
+    minio_console        = "9090"
+    grafana              = "3000"
+    docker_tls           = "2376"
+    containerssh_metrics = "9101"
+  }
+  tags = {
+    gateway_vm     = "gateway"
+    logger_vm      = "logger"
+    sacrificial_vm = "sacrificial"
   }
 }
 
@@ -41,7 +47,7 @@ resource "google_compute_firewall" "allow_all_to_gateway_vm_2333" {
     ports    = ["2333"]
   }
   source_ranges = ["0.0.0.0/0"]
-  target_tags   = ["gateway"]
+  target_tags   = [local.tags.gateway_vm]
 }
 
 resource "google_compute_firewall" "allow_all_to_logger_vm_grafana" {
@@ -52,7 +58,7 @@ resource "google_compute_firewall" "allow_all_to_logger_vm_grafana" {
     ports    = [local.ports.grafana]
   }
   source_ranges = ["0.0.0.0/0"]
-  target_tags   = ["logger"]
+  target_tags   = [local.tags.logger_vm]
 }
 
 resource "google_compute_firewall" "allow_all_to_logger_vm_minio" {
@@ -66,7 +72,7 @@ resource "google_compute_firewall" "allow_all_to_logger_vm_minio" {
     ]
   }
   source_ranges = ["0.0.0.0/0"]
-  target_tags   = ["logger"]
+  target_tags   = [local.tags.logger_vm]
 }
 
 resource "google_compute_firewall" "allow_all_to_logger_vm_prometheus" {
@@ -79,7 +85,7 @@ resource "google_compute_firewall" "allow_all_to_logger_vm_prometheus" {
     ]
   }
   source_ranges = ["0.0.0.0/0"]
-  target_tags   = ["logger"]
+  target_tags   = [local.tags.logger_vm]
 }
 
 resource "google_compute_firewall" "allow_logger_vm_to_network_cadvisor" {
@@ -89,7 +95,7 @@ resource "google_compute_firewall" "allow_logger_vm_to_network_cadvisor" {
     protocol = "tcp"
     ports    = [local.ports.cadvisor]
   }
-  source_tags = ["logger"]
+  source_tags = [local.tags.logger_vm]
 }
 
 resource "google_compute_firewall" "allow_logger_vm_to_network_node_exporter" {
@@ -101,7 +107,20 @@ resource "google_compute_firewall" "allow_logger_vm_to_network_node_exporter" {
     ports    = [local.ports.node_exporter]
   }
 
-  source_tags = ["logger"]
+  source_tags = [local.tags.logger_vm]
+}
+
+resource "google_compute_firewall" "allow_logger_vm_to_gateway_vm_containerssh_metrics" {
+  name    = "allow-logger-vm-to-gateway-vm-containerssh-metrics"
+  network = google_compute_network.main.self_link
+
+  allow {
+    protocol = "tcp"
+    ports    = [local.ports.containerssh_metrics]
+  }
+
+  source_tags = [local.tags.logger_vm]
+  target_tags = [local.tags.gateway_vm]
 }
 
 resource "google_compute_firewall" "deny_sacrificial_vm_to_all" {
@@ -110,7 +129,7 @@ resource "google_compute_firewall" "deny_sacrificial_vm_to_all" {
   network            = google_compute_network.main.name
   direction          = "EGRESS"
   destination_ranges = ["0.0.0.0/0"]
-  target_tags        = ["sacrificial"]
+  target_tags        = [local.tags.sacrificial_vm]
   deny {
     protocol = "all"
   }
@@ -123,6 +142,6 @@ resource "google_compute_firewall" "allow_gateway_vm_to_sacrificial_vm_docker_tl
     protocol = "tcp"
     ports    = [local.ports.docker_tls]
   }
-  source_tags = ["gateway"]
-  target_tags = ["sacrificial"]
+  source_tags = [local.tags.gateway_vm]
+  target_tags = [local.tags.sacrificial_vm]
 }

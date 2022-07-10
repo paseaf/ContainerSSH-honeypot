@@ -1,7 +1,7 @@
 resource "google_compute_instance" "gateway_vm" {
   name         = "gateway-vm"
   machine_type = var.machine_type
-  tags         = ["gateway"]
+  tags         = [local.tags.gateway_vm]
 
   boot_disk {
     initialize_params {
@@ -41,7 +41,7 @@ resource "google_compute_instance" "gateway_vm" {
 resource "google_compute_instance" "sacrificial_vm" {
   name         = "sacrificial-vm"
   machine_type = var.machine_type
-  tags         = ["sacrificial"]
+  tags         = [local.tags.sacrificial_vm]
   boot_disk {
     initialize_params {
       image = "sacrificial-vm-image"
@@ -62,7 +62,7 @@ resource "google_compute_instance" "sacrificial_vm" {
 resource "google_compute_instance" "logger_vm" {
   name         = "logger-vm"
   machine_type = var.machine_type
-  tags         = ["logger"]
+  tags         = [local.tags.logger_vm]
 
   boot_disk {
     initialize_params {
