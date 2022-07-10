@@ -83,7 +83,8 @@ build {
       "./scripts/download_node_exporter.sh",
       "./scripts/create_node_exporter_service.sh",
       "./scripts/install_docker.sh",
-      "./scripts/download_docker_images.sh"
+      "./scripts/download_docker_images.sh",
+      "./scripts/install_nginx_auth.sh"
     ]
     expect_disconnect = true
   }
