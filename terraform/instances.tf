@@ -62,7 +62,7 @@ resource "google_compute_instance" "sacrificial_vm" {
 resource "google_compute_instance" "logger_vm" {
   name         = "logger-vm"
   machine_type = var.machine_type
-  tags         = ["observer"]
+  tags         = ["logger"]
 
   boot_disk {
     initialize_params {

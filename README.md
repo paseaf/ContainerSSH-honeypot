@@ -10,30 +10,28 @@ Sacrificial VM provides infrastructure for containers.
 
 ### Ports
 
-SSH:
-- Gateway VM SSH Honeypot: `2222`, `22`
-- Gateway VM SSHD: `2333`
-- Other VMs SSHD: `22`
+Gateway VM:
+- Honeypot gateway: `22`, `2222` (`2222` is redirected to `22`)
+- SSH: `2333`
+- cAdvisor: `8088`
+- Node Exporter: `9100`
+- ContainerSSH auth-config server: `8080`
+- ContainerSSH metrics server(TBD): `9101`
 
-Audit:
-
+Logger VM:
+- SSH: `22`
+- cAdvisor: `8088`
+- Node Exporter: `9100`
 - MinIO server: `9000`
 - MinIO Console: `9090`
-
-Monitoring
-
 - Grafana: `3000`
 - Prometheus: `9091`
 
-Services:
-
-- Auth-Config: `8080`
-- containerSSH Audit-logs: `9101`
-
-Utilities:
-
+Sacrificial VM:
+- SSH: `22`
 - cAdvisor: `8088`
-- Node exporter: `9100`
+- Node Exporter: `9100`
+- Dockerd over TLS: `2376`
 
 ## Setting up the service on GCP
 
