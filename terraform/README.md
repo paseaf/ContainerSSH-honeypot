@@ -11,13 +11,12 @@ Install Terraform as follows:
 2. Install [Terraform CLI](https://learn.hashicorp.com/tutorials/terraform/install-cli?in=terraform/gcp-get-started)
 
 3. Create and download a GCP _service account key_ (in JSON) following [Terraform - Set Up GCP](https://learn.hashicorp.com/tutorials/terraform/google-cloud-platform-build?in=terraform/gcp-get-started).\
-   Terraform will use it to manage your GCP resources. Move the key file to current folder as `./gcp-key.json`
+   Terraform will use it to manage your GCP resources. Move the key file to current folder as `./gcp.key.json`
 
 4. Create a `terraform/terraform.tfvars` file with the following content
 
    ```bash
-   project                  = "<your_GCP_project_ID>"
-   credentials_file         = "gcp.key.json"
+   project_id      = "<your_GCP_project_ID>"
    ```
 
 5. Create an SSH key to run commands on created VM
@@ -137,3 +136,12 @@ google_compute_instance.gateway_vm: Still creating... [5m10s elapsed]
 Possible solution:
 
 Remove `./deployer_key`, `./deployer_key.pub`, and regenerate them following this README.
+
+### Trouble: unset credentials
+Sometimes `terraform apply` may fail due to corrupted `./credentials.txt`.
+
+Regenerate the credential file via
+```bash
+./generate_credentials.sh
+```
+Then, `terraform destroy` and `terraform apply` again.
