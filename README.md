@@ -15,7 +15,7 @@ Gateway VM:
 - cAdvisor: `8088`
 - Node Exporter: `9100`
 - ContainerSSH auth-config server: `8080`
-- ContainerSSH metrics server(TBD): `9101`
+- ContainerSSH metrics server: `9101`
 
 Logger VM:
 
