@@ -10,6 +10,9 @@ if [ -z ${GRAFANA_ADMIN_USER+x} ]; then echo "GRAFANA_ADMIN_USER is unset. Exiti
 if [ -z ${GRAFANA_ADMIN_PASSWORD+x} ]; then echo "GRAFANA_ADMIN_PASSWORD is unset. Exiting..."; exit 1; fi
 
 sudo docker run \
+  --log-driver=loki \
+  --log-opt loki-url="http://logger-vm:3100/loki/api/v1/push" \
+  --log-opt loki-retries=0 \
   --volume=grafana_data:/var/lib/grafana \
   --volume=/home/deployer/grafana/provisioning/datasources:/etc/grafana/provisioning/datasources \
   --volume=/home/deployer/grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards \

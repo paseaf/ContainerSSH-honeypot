@@ -13,6 +13,9 @@ if [ -z ${MINIO_ROOT_PASSWORD+x} ]; then echo "MINIO_ROOT_PASSWORD is unset. Exi
 mkdir -p ~/minio/data
 
 sudo docker run -d \
+  --log-driver=loki \
+  --log-opt loki-url="http://logger-vm:3100/loki/api/v1/push" \
+  --log-opt loki-retries=0 \
    -p 9000:9000 \
    -p 9090:9090 \
    --name minIO \

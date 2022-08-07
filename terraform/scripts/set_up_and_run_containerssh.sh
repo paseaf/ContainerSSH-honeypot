@@ -46,6 +46,9 @@ sudo chown 1022:1022 /srv/containerssh/audit
 
 # run ContainerSSH
 sudo docker run -d \
+  --log-driver=loki \
+  --log-opt loki-url="http://logger-vm:3100/loki/api/v1/push" \
+  --log-opt loki-retries=0 \
   --restart=always --name containerssh \
   -v /srv/containerssh/:/etc/containerssh/ \
   -v /srv/containerssh/audit/:/var/log/containerssh/audit/ \
@@ -53,6 +56,9 @@ sudo docker run -d \
 
 # run auth & config servers
 sudo docker run -d \
+  --log-driver=loki \
+  --log-opt loki-url="http://logger-vm:3100/loki/api/v1/push" \
+  --log-opt loki-retries=0 \
   --restart=always \
   -p 127.0.0.1:8080:8080 \
   -e CONTAINERSSH_ALLOW_ALL=1 \

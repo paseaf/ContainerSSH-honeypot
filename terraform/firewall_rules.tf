@@ -12,6 +12,7 @@ locals {
     grafana              = "3000"
     docker_tls           = "2376"
     containerssh_metrics = "9101"
+    loki                 = "3100"
   }
   tags = {
     gateway_vm     = "gateway"
@@ -57,6 +58,17 @@ resource "google_compute_firewall" "allow_all_to_logger_vm_grafana" {
   allow {
     protocol = "tcp"
     ports    = [local.ports.grafana]
+  }
+  source_ranges = ["0.0.0.0/0"]
+  target_tags   = [local.tags.logger_vm]
+}
+
+resource "google_compute_firewall" "allow_all_to_logger_vm_loki" {
+  name    = "allow-all-to-logger-vm-loki"
+  network = google_compute_network.main.self_link
+  allow {
+    protocol = "tcp"
+    ports    = [local.ports.loki]
   }
   source_ranges = ["0.0.0.0/0"]
   target_tags   = [local.tags.logger_vm]
