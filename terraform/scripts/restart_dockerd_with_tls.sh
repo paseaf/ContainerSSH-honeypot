@@ -8,7 +8,7 @@ TARGET_DIR=/lib/systemd/system/docker.service.d
 sudo mkdir -p "$TARGET_DIR"
 
 # override default ExecStart
-sudo bash -c 'cat << EOF > $TARGET_DIR/local.conf
+sudo bash -c "cat << EOF > $TARGET_DIR/local.conf
 [Service]
 ExecStart=
 ExecStart=/usr/bin/dockerd -H fd:// --containerd=/run/containerd/containerd.sock \
@@ -16,7 +16,7 @@ ExecStart=/usr/bin/dockerd -H fd:// --containerd=/run/containerd/containerd.sock
   --tlskey=/home/deployer/server-key.pem \
   --tlscert=/home/deployer/server-cert.pem \
   -H=0.0.0.0:2376
-EOF'
+EOF"
 
 sudo systemctl daemon-reload
 sudo systemctl restart docker
