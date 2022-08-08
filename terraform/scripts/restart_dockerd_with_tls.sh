@@ -5,10 +5,10 @@ export DEBIAN_FRONTEND=noninteractive
 # Make docker daemon only accept connections with trusted certificate
 
 TARGET_DIR=/lib/systemd/system/docker.service.d
-mkdir -p "$TARGET_DIR"
+sudo mkdir -p "$TARGET_DIR"
 
 # override default ExecStart
-cat > "$TARGET_DIR/local.conf" << EOF
+sudo bash -c "cat << EOF > $TARGET_DIR/local.conf
 [Service]
 ExecStart=
 ExecStart=/usr/bin/dockerd -H fd:// --containerd=/run/containerd/containerd.sock \
@@ -16,9 +16,9 @@ ExecStart=/usr/bin/dockerd -H fd:// --containerd=/run/containerd/containerd.sock
   --tlskey=/home/deployer/server-key.pem \
   --tlscert=/home/deployer/server-cert.pem \
   -H=0.0.0.0:2376
-EOF
+EOF"
 
-systemctl daemon-reload
-systemctl restart docker
+sudo systemctl daemon-reload
+sudo systemctl restart docker
 
 sleep 1
