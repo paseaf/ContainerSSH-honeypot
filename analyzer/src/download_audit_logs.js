@@ -28,7 +28,7 @@ stream.on("data", async function (obj) {
 
     const objJson = JSON.stringify({
       name,
-      size,
+      byteSize: size,
       lastModified,
       ip,
       isAuthenticated,

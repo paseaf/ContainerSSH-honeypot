@@ -17,7 +17,7 @@ fs.writeFile(
 function addCountry(log) {
   const country = geoip.lookup(log.ip).country;
   return {
-    country,
     ...log,
+    country,
   };
 }
