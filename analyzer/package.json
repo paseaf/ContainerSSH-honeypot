@@ -4,6 +4,7 @@
   "description": "Log analyzer",
   "main": "index.js",
   "scripts": {
+    "download": "node ./src/download_audit_logs.js",
     "postinstall": "scripts/get_envs.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

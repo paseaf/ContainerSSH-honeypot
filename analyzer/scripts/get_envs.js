@@ -37,4 +37,10 @@ function getVmIp(vmName) {
   const ip = result.stdout.split("\n").at(0);
   return ip;
 }
-configureDotEnv().catch((e) => console.error(e));
+configureDotEnv().catch((e) =>
+  console.error(
+    `Failed to initialize credentials.
+Have you deployed infrastructure with "terraform apply"?`,
+    e
+  )
+);
