@@ -22,11 +22,17 @@ stream.on("data", async function (obj) {
   try {
     console.log(`Downloading ${obj.name}...`);
     const { name, size, lastModified } = obj;
+    const ip = obj.metadata["X-Amz-Meta-Ip"];
+    const isAuthenticated = obj.metadata["X-Amz-Meta-Authenticated"];
+    const username = obj.metadata["X-Amz-Meta-Username"];
+
     const objJson = JSON.stringify({
       name,
       size,
       lastModified,
-      ...obj.metadata,
+      ip,
+      isAuthenticated,
+      username,
     });
 
     if (isFirst) {
