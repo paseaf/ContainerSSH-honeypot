@@ -14,7 +14,7 @@ const TARGET_PATH = "./downloads/object_list.json";
 
 fs.writeFile(TARGET_PATH, "[");
 let isFirst = true;
-const stream = minioClient.listObjectsV2("honeypot");
+const stream = minioClient.extensions.listObjectsV2WithMetadata("honeypot");
 console.log("Downloading bucket object info...");
 
 stream.on("data", async function (obj) {
@@ -26,6 +26,7 @@ stream.on("data", async function (obj) {
       name,
       size,
       lastModified,
+      ...obj.metadata,
     });
 
     if (isFirst) {
