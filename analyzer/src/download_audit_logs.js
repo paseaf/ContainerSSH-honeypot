@@ -1,6 +1,6 @@
 const Minio = require("minio");
 require("dotenv").config();
-const fs = require("fs/promises");
+const fs = require("fs");
 
 const minioClient = new Minio.Client({
   endPoint: process.env.LOGGER_VM_IP,
@@ -10,14 +10,14 @@ const minioClient = new Minio.Client({
   secretKey: process.env.MINIO_ROOT_PASSWORD,
 });
 
-const TARGET_PATH = "./downloads/object_list.json";
+const TARGET_PATH = "./downloads/downloaded_audit_log_metadata.json";
 
-fs.writeFile(TARGET_PATH, "[");
+fs.writeFileSync(TARGET_PATH, "[");
 let isFirst = true;
 const stream = minioClient.extensions.listObjectsV2WithMetadata("honeypot");
 console.log("Downloading bucket object info...");
 
-stream.on("data", async function (obj) {
+stream.on("data", function (obj) {
   // Download object
   try {
     console.log(`Downloading ${obj.name}...`);
@@ -37,8 +37,11 @@ stream.on("data", async function (obj) {
 
     if (isFirst) {
       isFirst = false;
-      await fs.appendFile(TARGET_PATH, objJson);
-    } else await fs.appendFile(TARGET_PATH, ",\n" + objJson);
+      // Note: use sync to avoid race condition in appending lines
+      fs.appendFileSync(TARGET_PATH, objJson);
+    } else {
+      fs.appendFileSync(TARGET_PATH, ",\n" + objJson);
+    }
 
     console.log(`Finished downloading ${obj.name}...`);
   } catch (e) {
@@ -47,7 +50,7 @@ stream.on("data", async function (obj) {
 });
 
 stream.on("end", async () => {
-  await fs.appendFile(TARGET_PATH, "]");
+  fs.appendFileSync(TARGET_PATH, "]");
   console.log(`Download finished. File location: ${TARGET_PATH}`);
 });
 
