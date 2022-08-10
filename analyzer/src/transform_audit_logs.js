@@ -3,14 +3,14 @@
  */
 const fs = require("fs/promises");
 const geoip = require("geoip-country");
-const rawLogs = require("../downloads/object_list.json");
+const rawLogs = require("../downloads/downloaded_audit_log_metadata.json");
 
 // transform
 const transformedLogs = rawLogs.map(addCountry);
 
 // load
 fs.writeFile(
-  "./downloads/transformed_logs.json",
+  "./downloads/transformed_audit_log_metadata.json",
   JSON.stringify(transformedLogs).split("},{").join("},\n{")
 );
 

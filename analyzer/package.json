@@ -4,9 +4,11 @@
   "description": "Log analyzer",
   "main": "index.js",
   "scripts": {
-    "download": "node ./src/download_audit_logs.js",
     "postinstall": "scripts/get_envs.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "etl": "npm run download && npm run transform && npm run load",
+    "download": "node ./src/download_audit_logs.js",
+    "transform": "node ./src/transform_audit_logs.js",
+    "load": "node ./src/load_audit_logs_to_db.js"
   },
   "author": "",
   "license": "MIT",
