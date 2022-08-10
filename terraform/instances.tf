@@ -31,9 +31,15 @@ resource "google_compute_instance" "gateway_vm" {
     destination = "./config.yaml"
   }
 
+  provisioner "file" {
+    source      = "./files/promtail" # relative to terraform work_dir
+    destination = "./"           # relative to remote $HOME
+  }
+
   provisioner "remote-exec" {
     scripts = [
-      "./scripts/run_cadvisor.sh"
+      "./scripts/run_cadvisor.sh",
+      "./scripts/run_promtail.sh"
     ]
   }
 }
@@ -107,12 +113,24 @@ resource "google_compute_instance" "logger_vm" {
     destination = "./"              # relative to remote $HOME
   }
 
+  provisioner "file" {
+    source      = "./files/loki" # relative to terraform work_dir
+    destination = "./"           # relative to remote $HOME
+  }
+
+  provisioner "file" {
+    source      = "./files/promtail" # relative to terraform work_dir
+    destination = "./"           # relative to remote $HOME
+  }
+
   provisioner "remote-exec" {
     scripts = [
       "./scripts/run_cadvisor.sh",
       "./scripts/run_minio.sh",
       "./scripts/run_prometheus.sh",
-      "./scripts/run_grafana.sh"
+      "./scripts/run_grafana.sh",
+      "./scripts/run_loki.sh",
+      "./scripts/run_promtail.sh"
     ]
   }
 }

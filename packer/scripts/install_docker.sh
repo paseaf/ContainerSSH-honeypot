@@ -22,3 +22,5 @@ echo \
 # install docker engine
 apt-get update
 apt-get install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
+docker plugin install grafana/loki-docker-driver:latest --alias loki --grant-all-permissions
+systemctl restart docker

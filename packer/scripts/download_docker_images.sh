@@ -12,8 +12,10 @@ docker pull gcr.io/cadvisor/cadvisor:"$VERSION"
 # rename for docker run later
 docker image tag gcr.io/cadvisor/cadvisor:"$VERSION" cadvisor:latest
 
-# Grafana
-docker pull  grafana/grafana
+# Grafana, Loki and Promtail
+docker pull grafana/grafana
+docker pull grafana/loki
+docker pull grafana/promtail
 
 # MinIO
 docker pull quay.io/minio/minio
