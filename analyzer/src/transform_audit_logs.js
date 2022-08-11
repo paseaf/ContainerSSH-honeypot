@@ -5,14 +5,18 @@ const fs = require("fs/promises");
 const geoip = require("geoip-country");
 const rawLogs = require("../downloads/downloaded_audit_log_metadata.json");
 
-// transform
-const transformedLogs = rawLogs.map(addCountry);
+main();
 
-// load
-fs.writeFile(
-  "./downloads/transformed_audit_log_metadata.json",
-  JSON.stringify(transformedLogs).split("},{").join("},\n{")
-);
+function main() {
+  // transform
+  const transformedLogs = rawLogs.map(addCountry);
+
+  // load
+  fs.writeFile(
+    "./downloads/transformed_audit_log_metadata.json",
+    JSON.stringify(transformedLogs).split("},{").join("},\n{")
+  );
+}
 
 function addCountry(log) {
   const country = geoip.lookup(log.ip).country;
