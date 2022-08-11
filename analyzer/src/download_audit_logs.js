@@ -57,3 +57,51 @@ stream.on("end", async () => {
 stream.on("error", function (err) {
   console.log(err);
 });
+downloadAuditLogs().catch((e) => {
+  throw e;
+});
+async function downloadAuditLogs() {
+  const metadataRecords = require(`../${METADATA_PATH}`);
+  const recordLength = metadataRecords.length;
+
+  console.log(`Total number of records to download: ${recordLength}`);
+  let downloadCount = 0;
+  // download in bulks
+  const bulkSize = 500;
+  const numberOfBulks = Math.ceil(recordLength / bulkSize);
+  for (let bulkId = 0; bulkId < numberOfBulks; bulkId++) {
+    const bulkBeginPosition = bulkId * bulkSize;
+    const bulkEndPosition = Math.min(
+      recordLength,
+      bulkBeginPosition + bulkSize
+    );
+
+    const promises = metadataRecords
+      .slice(bulkBeginPosition, bulkEndPosition)
+      .map((record) => record.name)
+      .map((objectName) => {
+        downloadCount++;
+
+        // skip if already downloaded
+        try {
+          fs.accessSync(`${OBJECT_DIR_PATH}/${objectName}`);
+          console.log(`Object ${objectName} already exists. Skipped`);
+        } catch (_e) {
+          return minioClient.fGetObject(
+            BUCKET_NAME,
+            objectName,
+            `${OBJECT_DIR_PATH}/${objectName}`
+          );
+        }
+      });
+
+    console.log(
+      `Downloading bulk ${bulkId}. Progress: ${bulkId + 1}/${numberOfBulks}.`
+    );
+    await Promise.all(promises);
+    console.log(`Finished downloading bulk ${bulkId}`);
+  }
+  console.log(
+    `Download finished. Expected #download: ${recordLength}; Actual #download: ${downloadCount}`
+  );
+}
