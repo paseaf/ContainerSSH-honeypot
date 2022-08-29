@@ -6,7 +6,8 @@ const geoip = require("geoip-country");
 const rawMetadata = require("../downloads/downloaded_audit_log_metadata.json");
 
 const { spawn } = require("node:child_process");
-const { open } = require("node:fs/promises");
+const { open, readdir } = require("node:fs/promises");
+const { assert } = require("console");
 main().catch((e) => console.error(e));
 
 async function main() {
@@ -29,29 +30,59 @@ function addCountry(log) {
   };
 }
 
-// TODO: decode all files
 async function transformAuditLogs() {
-  const objectName = "636d8cad6195424b926ed2ebb34e2946";
-  const decoder = spawn("containerssh-auditlog-decoder", [
-    "-file",
-    `./downloads/objects/${objectName}`,
-  ]);
+  const objectDir = "./downloads/objects";
+  const objectNames = (await readdir(objectDir)).filter(
+    (filename) => filename.length === 32
+  );
 
-  const fd = await open(`./downloads/objects/${objectName}.decoded`, "w");
-  const writable = fd.createWriteStream({
-    encoding: "utf8",
-  });
+  // decoding
+  const decodedDir = "./downloads/objects_decoded";
+  let currentProgress = 0;
+  for (const objectName of objectNames) {
+    const decoder = spawn("containerssh-auditlog-decoder", [
+      "-file",
+      `${objectDir}/${objectName}`,
+    ]);
 
-  decoder.stdout.on("error", (error) => {
-    console.error("Failed to decode the file.", error);
-  });
+    const fd = await open(`${decodedDir}/${objectName}.json`, "w");
+    const writable = fd.createWriteStream({
+      encoding: "utf8",
+    });
 
-  decoder.stdout.on("data", (data) => {
-    console.log(data.toString());
-    writable.write(data.toString());
-  });
+    console.log(`Decoding ${objectName}...`);
 
-  decoder.on("close", (status) => {
-    console.log(`Decoder exited with status ${status}`);
-  });
+    // event handlers
+    decoder.stdout.on("error", (error) => {
+      console.error("Failed to decode the file.", error);
+    });
+
+    decoder.stdout.on("data", (data) => {
+      writable.write(data.toString());
+    });
+
+    decoder.on("close", (exitCode) => {
+      if (exitCode === 0) {
+        console.log(
+          `${objectName} decoded! Progress: ${currentProgress}/${objectNames.length}`
+        );
+        currentProgress++;
+        fd?.close();
+      } else {
+        console.error(
+          `ERROR: failed to decode ${objectName}. Exit code ${exitCode}`
+        );
+        process.exit(1);
+      }
+    });
+  }
+
+  // verification
+  const decodedObjectNames = await readdir(decodedDir);
+  assert(
+    objectNames.length === decodedObjectNames.length,
+    `Verification failed! Make sure if decoded folder is clean!
+Number of original objects: ${objectNames.length}
+Number of decoded objects: ${decodedObjectNames.length}`
+  );
 }
