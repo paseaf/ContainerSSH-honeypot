@@ -48,6 +48,9 @@ Here are some example insights we discovered by analyzing audit logs.
 
 - Most popular username: `root`
 
+  <img src="https://user-images.githubusercontent.com/33207565/187531472-4d8a1884-db04-418b-91b2-376225c28a45.png" width="400px">
+
+
   ```sql
   SELECT username, COUNT(*) AS frequency
   FROM audit_log
@@ -55,22 +58,20 @@ Here are some example insights we discovered by analyzing audit logs.
   GROUP BY username
   ORDER BY frequency DESC;
   ```
-
-  <img src="https://user-images.githubusercontent.com/33207565/187531472-4d8a1884-db04-418b-91b2-376225c28a45.png" width="400px">
-
 - Most attacks happened on weekends
+
   <img src="https://user-images.githubusercontent.com/33207565/187530000-c10f7115-8d43-4b84-aae5-1a587258c50c.png" width="200px">
 
   ```sql
-  SELECT
-  	strftime('%w', lastModified) AS "weekDay(0=SUN)",
-  	COUNT(*) AS frequency
+  SELECT strftime('%w', lastModified) AS "weekDay(0=SUN)",
+    COUNT(*) AS frequency
   FROM audit_log
   GROUP BY "weekDay(0=SUN)"
   ORDER BY frequency DESC;
   ```
 
 - Top passwords
+
   <img src="https://user-images.githubusercontent.com/33207565/187530106-f767be46-c97d-4ef1-845b-6966cac35f0b.png" width="350px">
 
   ```sql
@@ -82,8 +83,5 @@ Here are some example insights we discovered by analyzing audit logs.
   ```
 
 - Attacker commands preview
+
   <img src="https://user-images.githubusercontent.com/33207565/187530302-d1622b68-1641-4a85-aa09-2094f925b931.png" width="350px">
-
-```
-
-```
