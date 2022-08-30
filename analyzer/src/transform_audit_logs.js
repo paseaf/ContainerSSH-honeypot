@@ -22,7 +22,7 @@ async function main() {
   );
 
   await decodeAuditLogs();
-  await parseDecodedAuditLogs();
+  await extractDataFromAuditLogs();
 }
 
 function addCountry(log) {
@@ -93,7 +93,7 @@ Number of decoded objects: ${decodedObjectNames.length}`
 /**
  * Parse decoded audit logs and extract parts of data for analysis
  */
-async function parseDecodedAuditLogs() {
+async function extractDataFromAuditLogs() {
   // decoding
   const sourceDir = "./downloads/objects_decoded";
   const sourceFileNames = (await readdir(sourceDir)).filter(
@@ -118,6 +118,7 @@ async function parseDecodedAuditLogs() {
     });
 
     const parsedObject = {
+      objectName: sourceFileName.substring(0, 32),
       password: undefined,
       commands: [],
       startTimestamp: 0,
