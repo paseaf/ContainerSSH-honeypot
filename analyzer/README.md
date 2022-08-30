@@ -38,3 +38,42 @@ Or open the file with your SQL browser and have fun with queries!
 ### DB Schema
 
 ![](./diagrams/db_schema.drawio.svg)
+
+## Results Showcase
+
+- Most popular username: `root`
+```sql
+SELECT username, COUNT(*) AS frequency
+FROM audit_log
+WHERE isAuthenticated = TRUE
+GROUP BY username
+ORDER BY frequency DESC;
+```
+![image](https://user-images.githubusercontent.com/33207565/187529756-2a771e77-2cb7-4f7e-9105-74d4d828e38f.png)
+
+- Most attacks happened on weekends
+![image](https://user-images.githubusercontent.com/33207565/187530000-c10f7115-8d43-4b84-aae5-1a587258c50c.png)
+
+```sql
+SELECT
+	strftime('%w', lastModified) AS "weekDay(0=SUN)",
+	COUNT(*) AS frequency
+FROM audit_log
+GROUP BY "weekDay(0=SUN)"
+ORDER BY frequency DESC;
+```
+
+- Top passwords
+![image](https://user-images.githubusercontent.com/33207565/187530106-f767be46-c97d-4ef1-845b-6966cac35f0b.png)
+```sql
+SELECT 
+	password,
+	COUNT(*) AS frequency
+FROM audit_log
+WHERE isAuthenticated is TRUE
+GROUP BY password
+ORDER BY frequency DESC;
+```
+
+- Attacker commands preview
+![image](https://user-images.githubusercontent.com/33207565/187530302-d1622b68-1641-4a85-aa09-2094f925b931.png)
