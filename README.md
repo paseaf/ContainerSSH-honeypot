@@ -1,7 +1,15 @@
 # ContainerSSH-honeypot
+
 An SSH honeypot built with [ContainerSSH](https://containerssh.io/) on GCP.
 
+## Highlights
+
+- Montoring system: our system is minitored with [Prometheus](https://prometheus.io/), [Grafana](https://grafana.com/), and [cAdvisor](https://github.com/google/cadvisor)
+- Audit logging: we log attackers IP, username, password, and all SSH activities, thanks to [ContianerSSH](https://containerssh.io/)
+- Data integrator: with a single command, audit logs are downloaded from our system on GCP, transformed, then loaded into a local database for further analysis.
+
 ## Infrastructure
+
 ![infra diagram](./diagrams/infra.drawio.svg)
 
 Sacrificial VM provides infrastructure for containers.
