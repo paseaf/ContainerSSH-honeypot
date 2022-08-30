@@ -1,0 +1,25 @@
+{
+  "name": "analyzer",
+  "version": "0.1.0",
+  "description": "Log analyzer",
+  "main": "index.js",
+  "scripts": {
+    "postinstall": "scripts/get_envs.js",
+    "etl": "npm run download && npm run transform && npm run load",
+    "download": "node ./src/download_audit_logs.js",
+    "transform": "node ./src/transform_audit_logs.js",
+    "load": "node ./src/load_audit_logs_to_db.js"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "dotenv": "^16.0.1",
+    "geoip-country": "^4.1.16",
+    "minio": "^7.0.30",
+    "shelljs": "^0.8.5",
+    "sqlite3": "^5.0.11"
+  },
+  "devDependencies": {
+    "eslint": "^8.23.0"
+  }
+}
