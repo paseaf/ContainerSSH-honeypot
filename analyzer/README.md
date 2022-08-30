@@ -22,7 +22,12 @@ npm run etl
 
 Audit logs are inserted into a SQLite DB file at `./audit_log.db`.
 
-Open the file with your SQL browser and have fun with queries!
+Open the db via command line:
+```bash
+sqlite3 audit_log.db
+```
+
+Or open the file with your SQL browser and have fun with queries!
 
 ## How it works
 
