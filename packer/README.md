@@ -1,28 +1,31 @@
 # Packer
 
-We use [Packer](https://www.packer.io/) to create a [VM image on GCP](https://cloud.google.com/compute/docs/images) with the latest software and Docker installed.
-The image can be used to create secure VMs.
+We use [Packer](https://www.packer.io/) to create [VM images on GCP](https://cloud.google.com/compute/docs/images) with the latest required software installed.
+The images are used to create secure VMs for next steps.
 
 ## How it works
 
 Packer will
 
 1. create a VM on Google Cloud Platform (GCP)
-2. run our scripts to update software and install Docker on the VM
-3. take a snapshot of the VM and store it as an image called `sacrificial-vm` on GCP
+2. run our scripts to update and install software (e.g., Docker, Prometheus, ContainerSSH) on the VM
+3. take a snapshot of the VM and store it as an image on GCP
 4. delete the VM
+
+Two images are created:
+
+- `ubuntu-with-docker-image` for _Gateway VM_ and _Logger VM_
+- `sacrificial-vm-image` for _Sacrificial VM_
 
 ## Getting Started
 
 ### Prerequisite
 
-What you need:
+- [`gcloud CLI`](https://cloud.google.com/sdk/docs/install)
+- A GCP account
+- [Packer](https://www.packer.io/downloads)
 
-- `gcloud` installed locally
-- A GCP project
-- [Packer installed](https://www.packer.io/downloads) locally
-
-### Set up Packer
+### Setting up Packer for GCP
 
 1. Set up GCP service account for Packer following [Packer - Running outside of Google Cloud](https://www.packer.io/plugins/builders/googlecompute#running-outside-of-google-cloud)
 
@@ -34,24 +37,24 @@ What you need:
    project_id      = "<your_GCP_project_ID>"
    ```
 
-### Build the image
+### Building the images
 
 Run
 
 ```bash
-packer init . && packer build -force .
+./run.sh
 ```
 
-An image should be built to your GCP project
+Images should be built to your GCP project.
 
-Note: `-force` to overwrite previously built image.
+## Troubleshooting
 
-### Troubleshooting
+1. You may need to enable some GCP services if it is your first time to use GCP. Follow the links in error logs and enable them.
 
 1. Flaky `packer build -force`\
    Solution: rerun the command. There are strange errors sometimes and we don't yet know how to solve it :P
 
-2. Red text in log\
+1. Red text in log\
    ![image](https://user-images.githubusercontent.com/33207565/169320895-0fcc5d3d-67ac-48e7-87f4-54c49dc28707.png)
    Answer: It's an expected behavior caused by `set -x` in our bash scripts!!\
    See [here](https://github.com/hashicorp/packer/issues/7947#issuecomment-520566272)

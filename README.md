@@ -1,19 +1,21 @@
 # ContainerSSH-honeypot
 
-An SSH honeypot built with [ContainerSSH](https://containerssh.io/) on GCP.
+An SSH honeypot built with [ContainerSSH](https://containerssh.io/) for GCP.
 
 ## Highlights
 
 - **Infrastructure-as-Code**: all the infrastructure, software installation and configuration steps are coded with the help of Terraform and Packer
 - **Montoring system**: our system is monitored with [Prometheus](https://prometheus.io/), [Grafana](https://grafana.com/), and [cAdvisor](https://github.com/google/cadvisor)
 - **Audit logging**: we log attackers' IP, username, password, and all SSH activities, thanks to [ContianerSSH](https://containerssh.io/)
-- [**Data integrator**](./analyzer): with a single command, audit logs are downloaded from GCP, transformed locally, then loaded into a local database for further analysis.
+- [**Data integrator**](./analyzer): with a single command, audit logs are downloaded from GCP, transformed locally, then loaded into a local database for further analysis
 
 ## Infrastructure
 
 ![infra diagram](./diagrams/infra.drawio.svg)
 
-Sacrificial VM provides infrastructure for containers.
+- _Gateway VM_ works as a proxy, and logs user interactions to _Logger VM_.
+- _Sacrificial VM_ hosts containers for SSH backend.
+- _Logger VM_ hosts audit log storage and monitoring systems.
 
 ### Ports
 
@@ -43,14 +45,19 @@ Sacrificial VM:
 - Node Exporter: `9100`
 - Dockerd over TLS: `2376`
 
-## Deploying the honeypot to GCP
+## Getting started
+
+### Prerequisites
+
+- Linux (tested on Fedora and Ubuntu)
+- a GCP account
+
+### Deploying the Honeypot System
 
 1. Build VM images following [`/packer/README.md`](/packer/README.md)
 2. Provision infrastructure and deploy services following [`/terraform/README.md`](/terraform/README.md)
 
-## Trying out the honeypot
-
-To SSH into the honeypot:
+Now, you should be able to asscess your SSH honeypot via
 
 ```bash
 ssh -oHostKeyAlgorithms=+ssh-rsa \
@@ -60,8 +67,6 @@ ssh -oHostKeyAlgorithms=+ssh-rsa \
 ```
 
 Your will be redirected to a newly created container in the sacrificial VM.
-
-All SSH interactions with the honeypot are audited and logged into MinIO.
 
 ## Accessing audit logs and metrics
 
@@ -88,7 +93,14 @@ prometheus = "http://34.89.246.67:19091/"
 
 Log in with credentials generated at `./terraform/credentials.txt`.
 
-### Download and decode audit logs
+### Downloading and Analyzing Audit Logs
+
+You can either
+
+1. download audit logs from MinIO _manually_
+2. or use our [log analyzer script](./analyzer) to download logs and load them into a SQLite database file.
+
+#### Manual download
 
 1. Open MinIO Console URL in browser.
 1. Log in with credentials generated at `./terraform/credentials.txt`
