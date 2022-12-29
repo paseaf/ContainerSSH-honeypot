@@ -21,20 +21,26 @@ Two images are created:
 
 ### Prerequisite
 
-- [`gcloud CLI`](https://cloud.google.com/sdk/docs/install)
 - A GCP account
-- [Packer](https://www.packer.io/downloads)
+- Install [`gcloud CLI`](https://cloud.google.com/sdk/docs/install) and initalize it with `gcloud init`
+- Install [Packer](https://www.packer.io/downloads)
 
 ### Setting up Packer for GCP
 
-1. Set up GCP service account for Packer following [Packer - Running outside of Google Cloud](https://www.packer.io/plugins/builders/googlecompute#running-outside-of-google-cloud)
+1. Set up default GCP account 
+   ```bash
+   gcloud auth application-default login
+   ```
+   For alternative login methods, check out [Packer - Authentication](https://developer.hashicorp.com/packer/plugins/builders/googlecompute#authentication).
 
-2. Move the downloaded service account key file to `./gcp.key.json`
-
-3. Create a `variables.auto.pkrvars.hcl` file:
+1. Create a `variables.auto.pkrvars.hcl` file:
 
    ```bash
    project_id      = "<your_GCP_project_ID>"
+   ```
+1. Initialize Packer at `./packer`
+   ```bash
+   packer init .
    ```
 
 ### Building the images

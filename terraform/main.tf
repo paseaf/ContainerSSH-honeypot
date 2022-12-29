@@ -11,8 +11,6 @@ provider "google" {
   project = var.project_id
   region  = "europe-west3"
   zone    = "europe-west3-c"
-
-  credentials = file(var.gcp_key_file)
 }
 
 resource "google_compute_network" "main" {
@@ -39,7 +37,7 @@ resource "null_resource" "set_up_docker_tls_and_containerssh" {
     connection {
       type        = "ssh"
       user        = "deployer"
-      private_key = file("./deployer_key")
+      private_key = "${file("~/.ssh/google_compute_engine")}"
       host        = google_compute_instance.sacrificial_vm.network_interface.0.access_config.0.nat_ip
     }
 
@@ -61,7 +59,7 @@ resource "null_resource" "set_up_docker_tls_and_containerssh" {
     connection {
       type        = "ssh"
       user        = "deployer"
-      private_key = file("./deployer_key")
+      private_key = "${file("~/.ssh/google_compute_engine")}"
       host        = google_compute_instance.gateway_vm.network_interface.0.access_config.0.nat_ip
     }
     source      = "./credentials.txt" # relative to terraform work_dir
@@ -73,7 +71,7 @@ resource "null_resource" "set_up_docker_tls_and_containerssh" {
     connection {
       type        = "ssh"
       user        = "deployer"
-      private_key = file("./deployer_key")
+      private_key = "${file("~/.ssh/google_compute_engine")}"
       host        = google_compute_instance.gateway_vm.network_interface.0.access_config.0.nat_ip
     }
 

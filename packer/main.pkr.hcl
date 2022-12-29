@@ -12,7 +12,6 @@ source "googlecompute" "ubuntu-2204" {
   source_image_family = "ubuntu-pro-2204-lts"
   ssh_username        = "root"
   zone                = "europe-west3-c"
-  account_file        = var.gcp_key_file
   machine_type        = "e2-small"
 }
 
@@ -50,7 +49,8 @@ build {
       "./scripts/create_node_exporter_service.sh",
       "./scripts/install_docker.sh",
       "./scripts/build_containerssh_guest_image.sh",
-      "./scripts/download_docker_images.sh"
+      "./scripts/download_docker_images.sh",
+      "./scripts/fix_access.sh"
     ]
     expect_disconnect = true
   }
@@ -84,7 +84,8 @@ build {
       "./scripts/create_node_exporter_service.sh",
       "./scripts/install_docker.sh",
       "./scripts/download_docker_images.sh",
-      "./scripts/install_nginx_auth.sh"
+      "./scripts/install_nginx_auth.sh",
+      "./scripts/fix_access.sh"
     ]
     expect_disconnect = true
   }

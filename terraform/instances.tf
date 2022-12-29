@@ -22,7 +22,7 @@ resource "google_compute_instance" "gateway_vm" {
   connection {
     type        = "ssh"
     user        = "deployer"
-    private_key = file("./deployer_key")
+    private_key = "${file("~/.ssh/google_compute_engine")}"
     host        = google_compute_instance.gateway_vm.network_interface.0.access_config.0.nat_ip
   }
 
@@ -83,7 +83,7 @@ resource "google_compute_instance" "logger_vm" {
   connection {
     type        = "ssh"
     user        = "deployer"
-    private_key = file("./deployer_key")
+    private_key = "${file("~/.ssh/google_compute_engine")}"
     host        = google_compute_instance.logger_vm.network_interface.0.access_config.0.nat_ip
   }
 
