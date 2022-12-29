@@ -41,6 +41,7 @@ async function decodeAuditLogs() {
 
   // decoding
   const decodedDir = "./downloads/objects_decoded";
+  await fs.mkdir(decodedDir, { recursive: true });
   let currentProgress = 0;
   for (const objectName of objectNames) {
     const decoder = spawn("containerssh-auditlog-decoder", [

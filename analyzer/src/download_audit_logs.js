@@ -15,7 +15,7 @@ const minioClient = new Minio.Client({
   secretKey: process.env.MINIO_ROOT_PASSWORD,
 });
 
-main("logs").catch((e) => {
+main("ALL").catch((e) => {
   throw e;
 });
 
@@ -81,18 +81,21 @@ function downloadAuditLogMetadata(targetPath) {
 
 function extractMetadata(objMetadata) {
   const { name, size: byteSize, lastModified } = objMetadata;
-  const ip = objMetadata.metadata["X-Amz-Meta-Ip"];
-  const isAuthenticated = objMetadata.metadata["X-Amz-Meta-Authenticated"];
-  const username = objMetadata.metadata["X-Amz-Meta-Username"];
-
-  return {
-    name,
-    byteSize,
-    lastModified,
-    ip,
-    isAuthenticated,
-    username,
-  };
+  const result = { name, byteSize, lastModified };
+  for (const { Key: key, Value: value } of objMetadata.metadata.Items) {
+    switch (key) {
+      case "X-Amz-Meta-Ip":
+        result.ip = value;
+        break;
+      case "X-Amz-Meta-Authenticated":
+        result.isAuthenticated = value;
+        break;
+      case "X-Amz-Meta-Username":
+        result.username = value;
+        break;
+    }
+  }
+  return result;
 }
 
 async function downloadAuditLogs(metadataFilePath, targetDir) {

@@ -19,9 +19,9 @@ After running the honeypot for sometime, we use this log analyzer to collect aud
 - Linux
 - Node.js >= 16
 - [DB Browser for SQLite](https://github.com/sqlitebrowser/sqlitebrowser) (or another SQL browser that supports SQLite)
-- [`containerssh-auditlog-decoder@v0.4.1`](https://github.com/ContainerSSH/ContainerSSH/releases/tag/v0.4.1) (`containerssh-auditlog-decoder` command must work in your bash)
+- Install [`containerssh-auditlog-decoder@v0.4.1`](https://github.com/ContainerSSH/ContainerSSH/releases/tag/v0.4.1) (`containerssh-auditlog-decoder` command must work in your bash)
 
-### Installation
+### Install Software and Download Logs
 
 Install software and start processing
 
