@@ -6,7 +6,7 @@ An SSH honeypot built with [ContainerSSH](https://containerssh.io/) for GCP.
 
 - **Infrastructure-as-Code**: all the infrastructure, software installation and configuration steps are coded with the help of Terraform and Packer
 - **Montoring system**: our system is monitored with [Prometheus](https://prometheus.io/), [Grafana](https://grafana.com/), and [cAdvisor](https://github.com/google/cadvisor)
-- **Audit logging**: we log attackers' IP, username, password, and all SSH activities, thanks to [ContianerSSH](https://containerssh.io/)
+- **Audit logging**: we log attackers' IP, username, password, and all SSH activities, thanks to [ContainerSSH](https://containerssh.io/)
 - [**Data integrator**](./analyzer): with a single command, audit logs are downloaded from GCP, transformed locally, then loaded into a local database for further analysis
 
 ## Infrastructure
