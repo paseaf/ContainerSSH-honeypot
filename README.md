@@ -68,6 +68,13 @@ ssh -oHostKeyAlgorithms=+ssh-rsa \
 
 Your will be redirected to a newly created container in the sacrificial VM.
 
+### Debugging
+Log into Gateway VM:
+```bash
+gcloud compute ssh gateway-vm --zone=europe-west3-c \
+   --ssh-flag="-p 2333"
+```
+
 ## Accessing audit logs and metrics
 
 After you deployed the honeypot, following monitoring tools should be available:
