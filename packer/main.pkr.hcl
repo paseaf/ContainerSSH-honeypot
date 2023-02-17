@@ -23,6 +23,7 @@ build {
 
   provisioner "shell" {
     inline = [
+      "adduser --disabled-password --gecos '' deployer",
       "mkdir -p /home/deployer/files",
       "mkdir -p /home/deployer/scripts"
     ]
@@ -64,6 +65,7 @@ build {
 
   provisioner "shell" {
     inline = [
+      "adduser --disabled-password --gecos '' deployer",
       "mkdir -p /home/deployer/scripts"
     ]
   }
