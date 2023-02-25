@@ -1,3 +1,4 @@
 node_modules
 .env
 audit_log.db
+downloads/

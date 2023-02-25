@@ -10,23 +10,10 @@ Install Terraform as follows:
 
 1. Install [Terraform CLI](https://learn.hashicorp.com/tutorials/terraform/install-cli?in=terraform/gcp-get-started)
 
-1. Create a `terraform/terraform.tfvars` file with the following content
+1. Run `./setup.sh` to create a var for including your `gcloud` default values
 
-   ```bash
-   project_id      = "<your_GCP_project_ID>"
    ```
-
-1. Create an SSH key to run commands on created VMs
-
-   ```bash
-   # create an ssh key
-   ssh-keygen -t ed25519 -a 100 -C "deployer" -f ./deployer_key -N ""
-
-   # add the ssh key to GCP project
-   public_key=$(cat ./deployer_key.pub)
-   echo "deployer":"$public_key" > ./temp_keyfile
-   gcloud compute project-info add-metadata --metadata-from-file=ssh-keys=./temp_keyfile
-   rm ./temp_keyfile
+   project_id      = "<your default gcloud project>"
    ```
 
 1. Verify if your Terraform is successfully set up.
@@ -57,10 +44,10 @@ Deployment should take around 3 minutes.
 When complete, access the honeypot via
 
 ```bash
-ssh -oHostKeyAlgorithms=+ssh-rsa \
-  $(gcloud compute instances describe gateway-vm \
-  --format='get(networkInterfaces[0].accessConfigs[0].natIP)' \
-  --zone=europe-west3-c)
+ssh -oHostKeyAlgorithms=+ssh-rsa -oPubkeyAcceptedKeyTypes=+ssh-rsa \
+ root@$(gcloud compute instances describe gateway-vm \
+ --format='get(networkInterfaces[0].accessConfigs[0].natIP)' \
+ --zone=europe-west3-c)
 ```
 
 You should be able to log in with any password.

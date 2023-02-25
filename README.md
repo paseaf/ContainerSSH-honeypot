@@ -60,8 +60,8 @@ Sacrificial VM:
 Now, you should be able to asscess your SSH honeypot via
 
 ```bash
-ssh -oHostKeyAlgorithms=+ssh-rsa \
- $(gcloud compute instances describe gateway-vm \
+ssh -oHostKeyAlgorithms=+ssh-rsa -oPubkeyAcceptedKeyTypes=+ssh-rsa \
+ root@$(gcloud compute instances describe gateway-vm \
  --format='get(networkInterfaces[0].accessConfigs[0].natIP)' \
  --zone=europe-west3-c)
 ```

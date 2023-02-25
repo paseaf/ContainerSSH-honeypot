@@ -13,7 +13,7 @@ provider "google" {
   zone    = "europe-west3-c"
 }
 
-resource "google_compute_network" "main" {
+resource "google_compute_network" "containerssh" {
   name                    = "containerssh"
   auto_create_subnetworks = false
 }
@@ -21,13 +21,13 @@ resource "google_compute_network" "main" {
 resource "google_compute_subnetwork" "gateway_subnet" {
   name          = "gateway-subnet"
   ip_cidr_range = "10.0.0.0/24"
-  network       = google_compute_network.main.self_link
+  network       = google_compute_network.containerssh.self_link
 }
 
 resource "google_compute_subnetwork" "honeypot_subnet" {
   name          = "honeypot-subnet"
   ip_cidr_range = "10.0.1.0/24"
-  network       = google_compute_network.main.self_link
+  network       = google_compute_network.containerssh.self_link
 }
 
 # Note: provisioner in this block only runs after all previous provisioners are finished

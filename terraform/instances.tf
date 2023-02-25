@@ -19,6 +19,10 @@ resource "google_compute_instance" "gateway_vm" {
     }
   }
 
+  metadata = {
+    ssh-keys = "deployer:${file("~/.ssh/google_compute_engine.pub")} \nroot:${file("~/.ssh/google_compute_engine.pub")}"
+  }
+
   connection {
     type        = "ssh"
     user        = "deployer"
@@ -57,6 +61,9 @@ resource "google_compute_instance" "sacrificial_vm" {
 
     }
   }
+  metadata = {
+    ssh-keys = "deployer:${file("~/.ssh/google_compute_engine.pub")} \nroot:${file("~/.ssh/google_compute_engine.pub")}"
+  }
 }
 
 resource "google_compute_instance" "logger_vm" {
@@ -67,7 +74,7 @@ resource "google_compute_instance" "logger_vm" {
   boot_disk {
     initialize_params {
       image = "ubuntu-with-docker-image"
-      size  = 200
+      size  = 40
       type  = "pd-balanced"
     }
   }
@@ -78,6 +85,10 @@ resource "google_compute_instance" "logger_vm" {
     access_config {
 
     }
+  }
+
+  metadata = {
+    ssh-keys = "deployer:${file("~/.ssh/google_compute_engine.pub")} \nroot:${file("~/.ssh/google_compute_engine.pub")}"
   }
 
   connection {

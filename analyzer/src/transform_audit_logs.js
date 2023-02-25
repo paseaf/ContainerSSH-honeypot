@@ -26,7 +26,10 @@ async function main() {
 }
 
 function addCountry(log) {
-  const country = geoip.lookup(log.ip).country;
+  console.log(log.ip);
+  const result = geoip.lookup(log.ip);
+  const country = result === null ? "NotFound" : result.country;
+
   return {
     ...log,
     country,

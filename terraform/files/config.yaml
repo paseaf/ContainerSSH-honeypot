@@ -1,20 +1,68 @@
 log:
-  level: warning
+  level: info
 ssh:
-  banner: |
-
-    ********************************************************************
-                               Warning!
-    ********************************************************************
-
-    This is a honeypot. All information, including IP address, username,
-    password, any commands you type, or files you upload will be visible
-    to the honeypot.
-
-    If you do not agree disconnect now.
-
-    ********************************************************************
-
+  # Change: remove banner
+  # banner:
+  # use gcp ubuntu pro 22
+  # default: SSH-2.0-ContainerSSH
+  # ssh -v localhost: SSH-2.0-OpenSSH_8.9p1 Ubuntu-3ubuntu0.1 
+  serverVersion: SSH-2.0-OpenSSH
+  ciphers:
+    # ssh -Q ciphers
+    - aes128-cbc
+    - aes128-ctr
+    - aes192-ctr
+    - aes256-ctr
+    - aes128-gcm@openssh.com
+    - aes256-gcm@openssh.com
+    - chacha20-poly1305@openssh.com
+    # not yet supported by ContainerSSH 0.4.1
+    # - 3des-cbc
+    # - aes192-cbc
+    # - aes256-cbc
+  kex:
+    # ssh -Q kex
+    - diffie-hellman-group1-sha1
+    - diffie-hellman-group14-sha1
+    - ecdh-sha2-nistp256
+    - ecdh-sha2-nistp384
+    - ecdh-sha2-nistp521
+    - curve25519-sha256@libssh.org
+    # unsupported
+    # diffie-hellman-group1-sha1
+    # diffie-hellman-group14-sha1
+    # diffie-hellman-group14-sha256
+    # diffie-hellman-group16-sha512
+    # diffie-hellman-group18-sha512
+    # diffie-hellman-group-exchange-sha1
+    # diffie-hellman-group-exchange-sha256
+    # ecdh-sha2-nistp256
+    # ecdh-sha2-nistp384
+    # ecdh-sha2-nistp521
+    # curve25519-sha256
+    # curve25519-sha256@libssh.org
+    # sntrup761x25519-sha512@openssh.com
+    # curve25519-sha256
+    # sntrup761x25519-sha512@openssh.com
+  macs:
+    # ssh -Q macs
+    - hmac-sha1
+    - hmac-sha1-96
+    - hmac-sha2-256
+    - hmac-sha2-256-etm@openssh.com
+    # unsupported
+    # hmac-sha2-512
+    # hmac-md5
+    # hmac-md5-96
+    # umac-64@openssh.com
+    # umac-128@openssh.com
+    # hmac-sha1-etm@openssh.com
+    # hmac-sha1-96-etm@openssh.com
+    # hmac-sha2-512-etm@openssh.com
+    # hmac-md5-etm@openssh.com
+    # hmac-md5-96-etm@openssh.com
+    # umac-64-etm@openssh.com
+    # umac-128-etm@openssh.com
   hostkeys:
     - /etc/containerssh/ssh_host_rsa_key
 backend: docker
@@ -28,13 +76,14 @@ docker:
     imagePullPolicy: Never
     container:
       image: containerssh-guest-image
-      hostname: bitcoin
+      hostname: ssh07
       # Disable network in the container
       networkdisabled: true
       # Force running as user 1000
       user: 1000
       # Optionally set working directory
-      workingdir: /home/ubuntu
+      # use 'admin' in our guest image as it is common in our attack data results
+      workingdir: /home/admin
     host:
       # Don't let the attacker write to the root FS.
       readonlyrootfs: true
@@ -55,7 +104,7 @@ docker:
         # Create writable directories in memory
         /tmp: rw,noexec,nosuid,size=65536k,uid=1000,gid=1000
         /run: rw,noexec,nosuid,size=65536k,uid=1000,gid=1000
-        /home/ubuntu: rw,noexec,nosuid,size=65536k,uid=1000,gid=1000
+        /home/admin: rw,noexec,nosuid,size=65536k,uid=1000,gid=1000
 metrics:
   enable: true
   listen: "0.0.0.0:9101"
