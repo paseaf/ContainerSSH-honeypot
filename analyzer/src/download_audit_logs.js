@@ -46,25 +46,21 @@ function downloadAuditLogMetadata(targetPath) {
     let isFirstRecord = true;
     stream.on("data", function (obj) {
       // Download metadata
-      try {
-        console.log(`Downloading ${obj.name}...`);
+      console.log(`Downloading ${obj.name}...`);
 
-        const logMetadata = extractMetadata(obj);
-        const objJson = JSON.stringify(logMetadata);
+      const logMetadata = extractMetadata(obj);
+      const objJson = JSON.stringify(logMetadata);
 
-        if (isFirstRecord) {
-          isFirstRecord = false;
-          // Note: use sync to avoid race condition when appending lines
-          fs.writeFileSync(targetPath, "[");
-          fs.appendFileSync(targetPath, objJson);
-        } else {
-          fs.appendFileSync(targetPath, ",\n" + objJson);
-        }
-
-        console.log(`Finished downloading ${obj.name}...`);
-      } catch (e) {
-        throw e;
+      if (isFirstRecord) {
+        isFirstRecord = false;
+        // Note: use sync to avoid race condition when appending lines
+        fs.writeFileSync(targetPath, "[");
+        fs.appendFileSync(targetPath, objJson);
+      } else {
+        fs.appendFileSync(targetPath, ",\n" + objJson);
       }
+
+      console.log(`Finished downloading ${obj.name}...`);
     });
 
     stream.on("end", () => {
@@ -80,21 +76,11 @@ function downloadAuditLogMetadata(targetPath) {
 }
 
 function extractMetadata(objMetadata) {
-  const { name, size: byteSize, lastModified } = objMetadata;
+  const { name, size: byteSize, lastModified, metadata } = objMetadata;
   const result = { name, byteSize, lastModified };
-  for (const { Key: key, Value: value } of objMetadata.metadata.Items) {
-    switch (key) {
-      case "X-Amz-Meta-Ip":
-        result.ip = value;
-        break;
-      case "X-Amz-Meta-Authenticated":
-        result.isAuthenticated = value;
-        break;
-      case "X-Amz-Meta-Username":
-        result.username = value;
-        break;
-    }
-  }
+  result.ip = metadata["X-Amz-Meta-Ip"];
+  result.isAuthenticated = metadata["X-Amz-Meta-Authenticated"];
+  result.username = metadata["X-Amz-Meta-Username"];
   return result;
 }
 
