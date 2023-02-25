@@ -20,18 +20,18 @@ locals {
   }
 }
 
-resource "google_compute_firewall" "allow_all_to_network_icmp" {
-  name    = "allow-all-to-network-icmp"
-  network = google_compute_network.main.self_link
+resource "google_compute_firewall" "containerssh_allow_all_to_network_icmp" {
+  name    = "containerssh-allow-all-to-network-icmp"
+  network = google_compute_network.containerssh.self_link
   allow {
     protocol = "icmp"
   }
   source_ranges = ["0.0.0.0/0"]
 }
 
-resource "google_compute_firewall" "allow_all_to_network_ssh" {
-  name    = "allow-all-to-network-ssh"
-  network = google_compute_network.main.self_link
+resource "google_compute_firewall" "containerssh_allow_all_to_network_ssh" {
+  name    = "containerssh-allow-all-to-network-ssh"
+  network = google_compute_network.containerssh.self_link
   allow {
     protocol = "tcp"
     ports    = ["22"]
@@ -39,10 +39,10 @@ resource "google_compute_firewall" "allow_all_to_network_ssh" {
   source_ranges = ["0.0.0.0/0"]
 }
 
-resource "google_compute_firewall" "allow_all_to_gateway_vm_2333" {
-  name        = "allow-all-to-gateway-vm-2333"
+resource "google_compute_firewall" "containerssh_allow_all_to_gateway_vm_2333" {
+  name        = "containerssh-allow-all-to-gateway-vm-2333"
   description = "Allow access to Gateway VM's SSH server on port 2333"
-  network     = google_compute_network.main.self_link
+  network     = google_compute_network.containerssh.self_link
   allow {
     protocol = "tcp"
     ports    = ["2333"]
@@ -51,9 +51,9 @@ resource "google_compute_firewall" "allow_all_to_gateway_vm_2333" {
   target_tags   = [local.tags.gateway_vm]
 }
 
-resource "google_compute_firewall" "allow_all_to_logger_vm_grafana" {
-  name    = "allow-all-to-logger-vm-grafana"
-  network = google_compute_network.main.self_link
+resource "google_compute_firewall" "containerssh_allow_all_to_logger_vm_grafana" {
+  name    = "containerssh-allow-all-to-logger-vm-grafana"
+  network = google_compute_network.containerssh.self_link
   allow {
     protocol = "tcp"
     ports    = [local.ports.grafana]
@@ -62,9 +62,9 @@ resource "google_compute_firewall" "allow_all_to_logger_vm_grafana" {
   target_tags   = [local.tags.logger_vm]
 }
 
-resource "google_compute_firewall" "allow_all_to_logger_vm_minio" {
-  name    = "allow-all-to-logger-vm-minio"
-  network = google_compute_network.main.self_link
+resource "google_compute_firewall" "containerssh_allow_all_to_logger_vm_minio" {
+  name    = "containerssh-allow-all-to-logger-vm-minio"
+  network = google_compute_network.containerssh.self_link
   allow {
     protocol = "tcp"
     ports = [
@@ -76,9 +76,9 @@ resource "google_compute_firewall" "allow_all_to_logger_vm_minio" {
   target_tags   = [local.tags.logger_vm]
 }
 
-resource "google_compute_firewall" "allow_all_to_logger_vm_prometheus_auth" {
-  name    = "allow-all-to-logger-vm-prometheus-auth"
-  network = google_compute_network.main.self_link
+resource "google_compute_firewall" "containerssh_allow_all_to_logger_vm_prometheus_auth" {
+  name    = "containerssh-allow-all-to-logger-vm-prometheus-auth"
+  network = google_compute_network.containerssh.self_link
   allow {
     protocol = "tcp"
     ports = [
@@ -89,9 +89,9 @@ resource "google_compute_firewall" "allow_all_to_logger_vm_prometheus_auth" {
   target_tags   = [local.tags.logger_vm]
 }
 
-resource "google_compute_firewall" "allow_logger_vm_to_network_cadvisor" {
-  name    = "allow-logger-vm-to-network-cadvisor"
-  network = google_compute_network.main.self_link
+resource "google_compute_firewall" "containerssh_allow_logger_vm_to_network_cadvisor" {
+  name    = "containerssh-allow-logger-vm-to-network-cadvisor"
+  network = google_compute_network.containerssh.self_link
   allow {
     protocol = "tcp"
     ports    = [local.ports.cadvisor]
@@ -99,9 +99,9 @@ resource "google_compute_firewall" "allow_logger_vm_to_network_cadvisor" {
   source_tags = [local.tags.logger_vm]
 }
 
-resource "google_compute_firewall" "allow_logger_vm_to_network_node_exporter" {
-  name    = "allow-logger-vm-to-network-node-exporter"
-  network = google_compute_network.main.self_link
+resource "google_compute_firewall" "containerssh_allow_logger_vm_to_network_node_exporter" {
+  name    = "containerssh-allow-logger-vm-to-network-node-exporter"
+  network = google_compute_network.containerssh.self_link
 
   allow {
     protocol = "tcp"
@@ -111,9 +111,9 @@ resource "google_compute_firewall" "allow_logger_vm_to_network_node_exporter" {
   source_tags = [local.tags.logger_vm]
 }
 
-resource "google_compute_firewall" "allow_logger_vm_to_gateway_vm_containerssh_metrics" {
-  name    = "allow-logger-vm-to-gateway-vm-containerssh-metrics"
-  network = google_compute_network.main.self_link
+resource "google_compute_firewall" "containerssh_allow_logger_vm_to_gateway_vm_containerssh_metrics" {
+  name    = "containerssh-allow-logger-vm-to-gateway-vm-containerssh-metrics"
+  network = google_compute_network.containerssh.self_link
 
   allow {
     protocol = "tcp"
@@ -124,10 +124,10 @@ resource "google_compute_firewall" "allow_logger_vm_to_gateway_vm_containerssh_m
   target_tags = [local.tags.gateway_vm]
 }
 
-resource "google_compute_firewall" "deny_sacrificial_vm_to_all" {
-  name               = "deny-sacrificial-vm-to-all"
+resource "google_compute_firewall" "containerssh_deny_sacrificial_vm_to_all" {
+  name               = "containerssh-deny-sacrificial-vm-to-all"
   description        = "Deny all outgoing connection from sacrificial host"
-  network            = google_compute_network.main.name
+  network            = google_compute_network.containerssh.name
   direction          = "EGRESS"
   destination_ranges = ["0.0.0.0/0"]
   target_tags        = [local.tags.sacrificial_vm]
@@ -136,9 +136,9 @@ resource "google_compute_firewall" "deny_sacrificial_vm_to_all" {
   }
 }
 
-resource "google_compute_firewall" "allow_gateway_vm_to_sacrificial_vm_docker_tls" {
-  name    = "allow-gateway-vm-to-sacrificial-vm-docker-tls"
-  network = google_compute_network.main.name
+resource "google_compute_firewall" "containerssh_allow_gateway_vm_to_sacrificial_vm_docker_tls" {
+  name    = "containerssh-allow-gateway-vm-to-sacrificial-vm-docker-tls"
+  network = google_compute_network.containerssh.name
   allow {
     protocol = "tcp"
     ports    = [local.ports.docker_tls]

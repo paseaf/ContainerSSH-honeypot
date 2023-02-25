@@ -27,17 +27,34 @@ Two images are created:
 
 ### Setting up Packer for GCP
 
-1. Set up default GCP account 
+0. Init GCP if you haven't
+
    ```bash
    gcloud auth application-default login
    ```
-   For alternative login methods, check out [Packer - Authentication](https://developer.hashicorp.com/packer/plugins/builders/googlecompute#authentication).
 
-1. Create a `variables.auto.pkrvars.hcl` file:
+1. Set up default GCP account
 
    ```bash
-   project_id      = "<your_GCP_project_ID>"
+   # Create service account `deployer`
+   gcloud iam service-accounts create "$SERVICE_ACCOUNT_NAME" \
+     --description="service account for running github actions" \
+     --display-name="GitHub Actions" \
+     --project "$PROJECT_ID"
+
+   gcloud projects add-iam-policy-binding "$PROJECT_ID" \
+     --member="serviceAccount:"$SERVICE_ACCOUNT_NAME"@$PROJECT_ID.iam.gserviceaccount.com" \
+     --role="roles/compute.instanceAdmin.v1"
+   gcloud projects add-iam-policy-binding "$PROJECT_ID" \
+     --member="serviceAccount:$SERVICE_ACCOUNT_NAME@$PROJECT_ID.iam.gserviceaccount.com" \
+     --role="roles/iam.serviceAccountUser"
+   gcloud projects add-iam-policy-binding "$PROJECT_ID" \
+     --member="serviceAccount:$SERVICE_ACCOUNT_NAME@$PROJECT_ID.iam.gserviceaccount.com" \
+     --role=roles/iap.tunnelResourceAccessor
    ```
+
+   For alternative login methods, check out [Packer - Authentication](https://developer.hashicorp.com/packer/plugins/builders/googlecompute#authentication).
+
 1. Initialize Packer at `./packer`
    ```bash
    packer init .
@@ -51,7 +68,7 @@ Run
 ./run.sh
 ```
 
-Images should be built to your GCP project.
+Images should be built to your _default_ GCP project.
 
 ## Troubleshooting
 
